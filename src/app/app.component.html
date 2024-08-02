@@ -188,7 +188,7 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <main class="main">
-  <div class="content">
+  <div class="content" *ngIf="!newUser">
     <div class="left-side">
       <mat-card appearance="outlined">
         <mat-card-content>
@@ -237,7 +237,7 @@
         </a>
       </div>
 
-      <mat-form-field>
+      <!-- <mat-form-field>
         <mat-label>Enter a date range</mat-label>
         <mat-date-range-input [rangePicker]="picker">
           <input matStartDate placeholder="Start date">
@@ -245,9 +245,21 @@
         </mat-date-range-input>
         <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-date-range-picker #picker></mat-date-range-picker>
-      </mat-form-field>
+      </mat-form-field> -->
 
     </div>
+  </div>
+  <div class="content" *ngIf="newUser">
+    <!-- <mat-form-field>
+      <mat-label>User Name</mat-label> -->
+      <div>user name</div>
+      <input
+        placeholder="some guy"
+        [(ngModel)]=username
+        required
+    />
+    <!-- </mat-form-field> -->
+    <button (click)="logUsername()">log username</button>
   </div>
 </main>
 
