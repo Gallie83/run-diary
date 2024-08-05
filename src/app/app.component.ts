@@ -53,8 +53,6 @@ export class AppComponent implements OnInit, AfterViewInit{
       if (!storage) {
         this.newUser = true;
       }
-      
-    
 
     console.log(this.newUser)
   }
@@ -65,6 +63,11 @@ export class AppComponent implements OnInit, AfterViewInit{
 
   public logUsername(): void {
     console.log(this.username);
+    this.user.username = this.username;
+    console.log(this.user);
+    // Save IUserData instance to localStorage then refresh page
+    localStorage.setItem('userData', JSON.stringify(this.user));
+    window.location.reload();
   }
 }
 
