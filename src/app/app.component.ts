@@ -9,6 +9,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
 import { NgIf } from '@angular/common';
 import {FormControl, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import openGeocoder from 'node-open-geocoder';
 
 
 @Component({
@@ -34,10 +35,20 @@ import {FormControl, FormsModule, ReactiveFormsModule, Validators} from '@angula
   styleUrl: './app.component.less'
 })
 
+
+
 export class AppComponent implements OnInit, AfterViewInit{
+
   title = 'run-diary';
 
-  public user: IUserData  = {username: '', totalDistance: 0};
+  public user: IUserData  = {
+    username: '', 
+    totalDistance: 0, 
+    startingLocation: {
+      lat:        0, 
+      long:       0, 
+      placeName:  ''
+    }};
   public newUser: boolean = false;
   public username: string = '';
 
@@ -61,19 +72,41 @@ export class AppComponent implements OnInit, AfterViewInit{
     
   }
 
-  public logUsername(): void {
-    console.log(this.username);
-    this.user.username = this.username;
-    console.log(this.user);
-    // Save IUserData instance to localStorage then refresh page
-    localStorage.setItem('userData', JSON.stringify(this.user));
-    window.location.reload();
+  public saveUserDetails(): void {
+    // console.log(this.username);
+    // this.user.username = this.username;
+    // console.log(this.user);
+    // // Save IUserData instance to localStorage then refresh page
+    // localStorage.setItem('userData', JSON.stringify(this.user));
+    // window.location.reload();
+
+    console.log(this.username)
+    this.convertAddress(this.username);
   }
+
+  public convertAddress(address: string): ICoordinates {
+    const openGeocoder = require('node-open-geocoder')
+
+    const valueToReturn: ICoordinates = {
+      lat:        0, 
+      long:       0, 
+      placeName:   address
+    }
+    openGeocoder()
+      .geocode(address)
+      .end((err: any, res: any) => {
+        console.log(err)
+        console.log(res)
+      })
+
+    return valueToReturn
+  } 
 }
 
 export interface ICoordinates {
-  lat:  number,
-  long: number
+  lat:       number,
+  long:      number,
+  placeName: string
 }
 
 export interface IGoal {
@@ -83,7 +116,8 @@ export interface IGoal {
 }
 
 export interface IUserData {
-  username:      string,
-  totalDistance: number,
-  goals?:        IGoal[]
+  username:         string,
+  totalDistance:    number,
+  startingLocation: ICoordinates,
+  goals?:           IGoal[]
 }
