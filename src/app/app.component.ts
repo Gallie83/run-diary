@@ -9,8 +9,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
 import { NgIf } from '@angular/common';
 import {FormControl, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import openGeocoder from 'node-open-geocoder';
-
+// @ts-ignore
+import  openGeocoder from 'node-open-geocoder';
 
 @Component({
   selector: 'app-root',
@@ -81,18 +81,17 @@ export class AppComponent implements OnInit, AfterViewInit{
     // window.location.reload();
 
     console.log(this.username)
-    this.convertAddress(this.username);
+    this.convertAddress(this.username).then(() => console.log('done'));
   }
 
-  public convertAddress(address: string): ICoordinates {
-    const openGeocoder = require('node-open-geocoder')
+  public async convertAddress(address: string): Promise<ICoordinates> {
 
     const valueToReturn: ICoordinates = {
       lat:        0, 
       long:       0, 
       placeName:   address
     }
-    openGeocoder()
+    await openGeocoder()
       .geocode(address)
       .end((err: any, res: any) => {
         console.log(err)
