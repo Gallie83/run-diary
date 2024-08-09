@@ -9,8 +9,11 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
 import { NgIf } from '@angular/common';
 import {FormControl, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import { environment } from './../environments/environment';
+import { Inject } from '@angular/core';
 // @ts-ignore
 import  openGeocoder from 'node-open-geocoder';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -40,6 +43,12 @@ import  openGeocoder from 'node-open-geocoder';
 export class AppComponent implements OnInit, AfterViewInit{
 
   title = 'run-diary';
+
+  private apiKey: string= environment.apiKey;
+
+  public apiUrl = `https://geocode.maps.co/search?q=English+Bay+Vancouver+CA&api_key=${this.apiKey}`
+
+  http = Inject(HttpClient);
 
   public user: IUserData  = {
     username: '', 
@@ -80,8 +89,8 @@ export class AppComponent implements OnInit, AfterViewInit{
     // localStorage.setItem('userData', JSON.stringify(this.user));
     // window.location.reload();
 
-    console.log(this.username)
     this.convertAddress(this.username).then(() => console.log('done'));
+    return this.http.get(this.apiUrl);
   }
 
   public async convertAddress(address: string): Promise<ICoordinates> {
@@ -91,12 +100,12 @@ export class AppComponent implements OnInit, AfterViewInit{
       long:       0, 
       placeName:   address
     }
-    await openGeocoder()
-      .geocode(address)
-      .end((err: any, res: any) => {
-        console.log(err)
-        console.log(res)
-      })
+    // await openGeocoder()
+    //   .geocode(address)
+    //   .end((err: any, res: any) => {
+    //     console.log(err)
+    //     console.log(res)
+    //   })
 
     return valueToReturn
   } 
