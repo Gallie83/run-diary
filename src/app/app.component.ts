@@ -8,17 +8,19 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
 import { NgIf } from '@angular/common';
-import {FormControl, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import { environment } from './../environments/environment';
-import { Inject } from '@angular/core';
-// @ts-ignore
-import  openGeocoder from 'node-open-geocoder';
-import { HttpClient } from '@angular/common/http';
+import {FormsModule} from '@angular/forms';
+import { environment } from '../environments/environment.development';
+import {HttpClientModule, HttpClient} from '@angular/common/http';
+
+import { Injectable } from  '@angular/core';
+
+// import  {geocoder} from 'geocoder';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
+    HttpClientModule,
     FormsModule,
     NgIf,
     RouterOutlet,
@@ -39,16 +41,13 @@ import { HttpClient } from '@angular/common/http';
 })
 
 
-
+@Injectable({
+  providedIn:  'root'
+})
 export class AppComponent implements OnInit, AfterViewInit{
+  constructor(private https: HttpClient) { }
 
   title = 'run-diary';
-
-  private apiKey: string= environment.apiKey;
-
-  public apiUrl = `https://geocode.maps.co/search?q=English+Bay+Vancouver+CA&api_key=${this.apiKey}`
-
-  http = Inject(HttpClient);
 
   public user: IUserData  = {
     username: '', 
@@ -81,6 +80,11 @@ export class AppComponent implements OnInit, AfterViewInit{
     
   }
 
+  public getQueryUrl(searchTerm: string): string {
+    const formattedSearch: string = searchTerm.replaceAll(' ', '+')
+    return `https://geocode.maps.co/search?q=${formattedSearch}&api_key=${environment.apiKey}`;
+  }
+
   public saveUserDetails(): void {
     // console.log(this.username);
     // this.user.username = this.username;
@@ -89,8 +93,8 @@ export class AppComponent implements OnInit, AfterViewInit{
     // localStorage.setItem('userData', JSON.stringify(this.user));
     // window.location.reload();
 
-    this.convertAddress(this.username).then(() => console.log('done'));
-    return this.http.get(this.apiUrl);
+    console.log(this.username)
+    this.convertAddress(this.username);
   }
 
   public async convertAddress(address: string): Promise<ICoordinates> {
@@ -100,12 +104,13 @@ export class AppComponent implements OnInit, AfterViewInit{
       long:       0, 
       placeName:   address
     }
-    // await openGeocoder()
-    //   .geocode(address)
-    //   .end((err: any, res: any) => {
-    //     console.log(err)
-    //     console.log(res)
-    //   })
+
+    let apiResponse: any[];
+    this.https.get(this.getQueryUrl(this.username)).subscribe(
+      (response) => {
+        console.log(response);
+      });
+
 
     return valueToReturn
   } 
