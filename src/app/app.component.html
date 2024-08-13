@@ -261,6 +261,9 @@
     <!-- </mat-form-field> -->
     <button (click)="saveUserDetails()">enter location</button>
   </div>
+  <div *ngFor="let item of apiResponse">
+    <app-address-card [addressDetails]="item"></app-address-card>
+  </div>
 </main>
 
 

@@ -7,12 +7,13 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
-import { NgIf } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import { environment } from '../environments/environment.development';
 import {HttpClientModule, HttpClient} from '@angular/common/http';
 
 import { Injectable } from  '@angular/core';
+import { AddressCardComponent } from './addressCard.component';
 
 // import  {geocoder} from 'geocoder';
 
@@ -23,6 +24,7 @@ import { Injectable } from  '@angular/core';
     HttpClientModule,
     FormsModule,
     NgIf,
+    NgFor,
     RouterOutlet,
     MatCardModule,
     MatProgressBarModule,
@@ -30,7 +32,8 @@ import { Injectable } from  '@angular/core';
     MatIconModule,
     MatDatepickerModule,
     MatFormFieldModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    AddressCardComponent
   ],
   providers: [  
     MatDatepickerModule,
@@ -60,6 +63,7 @@ export class AppComponent implements OnInit, AfterViewInit{
   public newUser: boolean = false;
   public username: string = '';
 
+  public apiResponse: any = [];
   ngOnInit(): void {
       //Todo: update type
       let storage: any;
@@ -92,7 +96,7 @@ export class AppComponent implements OnInit, AfterViewInit{
     // // Save IUserData instance to localStorage then refresh page
     // localStorage.setItem('userData', JSON.stringify(this.user));
     // window.location.reload();
-
+    
     console.log(this.username)
     this.convertAddress(this.username);
   }
@@ -109,6 +113,8 @@ export class AppComponent implements OnInit, AfterViewInit{
     this.https.get(this.getQueryUrl(this.username)).subscribe(
       (response) => {
         console.log(response);
+        this.apiResponse.push(response);
+        console.log(this.apiResponse);
       });
 
 
