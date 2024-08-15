@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
+import { NgFor } from '@angular/common';
+import { AppComponent } from './app.component';
 
 @Component({
   selector:    'app-address-card',
@@ -12,7 +14,7 @@ import { MatCardModule } from '@angular/material/card';
     <mat-card>
   <mat-card-title>{{ addressDetails?.display_name }}</mat-card-title>
   <mat-card-content>
-    <div>{{ addressDetails?.lat }}, {{ addressDetails?.lon }}</div>
+    <div>{{ addressDetails?.lat }}</div> 
   </mat-card-content>
 </mat-card>
   `,
@@ -21,7 +23,6 @@ import { MatCardModule } from '@angular/material/card';
 export class AddressCardComponent {
 
   @Input() addressDetails: IAddressDetails | undefined;
-
 
 }
 

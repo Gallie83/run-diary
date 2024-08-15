@@ -13,7 +13,7 @@ import { environment } from '../environments/environment.development';
 import {HttpClientModule, HttpClient} from '@angular/common/http';
 
 import { Injectable } from  '@angular/core';
-import { AddressCardComponent } from './addressCard.component';
+import { AddressCardComponent, IAddressDetails } from './addressCard.component';
 
 // import  {geocoder} from 'geocoder';
 
@@ -109,12 +109,10 @@ export class AppComponent implements OnInit, AfterViewInit{
       placeName:   address
     }
 
-    let apiResponse: any[];
-    this.https.get(this.getQueryUrl(this.username)).subscribe(
+    this.https.get<IAddressDetails[]>(this.getQueryUrl(this.username)).subscribe(
       (response) => {
-        console.log(response);
-        this.apiResponse.push(response);
         console.log(this.apiResponse);
+        this.apiResponse = response;
       });
 
 
