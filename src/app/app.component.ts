@@ -62,6 +62,7 @@ export class AppComponent implements OnInit, AfterViewInit{
     }};
   public newUser: boolean = false;
   public username: string = '';
+  public locationSearch: string = '';
 
   public apiResponse: any = [];
   ngOnInit(): void {
@@ -69,6 +70,11 @@ export class AppComponent implements OnInit, AfterViewInit{
       let storage: any;
       try {
         storage = localStorage.getItem('userData');
+        if(storage !== "" && !storage ) {
+
+          storage = JSON.parse(storage);
+          this.user = storage;
+        }
       } catch (error) {
         console.log(error);
       }
@@ -77,10 +83,11 @@ export class AppComponent implements OnInit, AfterViewInit{
         this.newUser = true;
       }
 
-    console.log(this.newUser)
+    console.log(this.user)
   }
 
   ngAfterViewInit(): void {
+
     
   }
 
@@ -89,16 +96,39 @@ export class AppComponent implements OnInit, AfterViewInit{
     return `https://geocode.maps.co/search?q=${formattedSearch}&api_key=${environment.apiKey}`;
   }
 
-  public saveUserDetails(): void {
-    // console.log(this.username);
-    // this.user.username = this.username;
-    // console.log(this.user);
-    // // Save IUserData instance to localStorage then refresh page
-    // localStorage.setItem('userData', JSON.stringify(this.user));
-    // window.location.reload();
+  public generateLocationList(): void {
     
-    console.log(this.username)
-    this.convertAddress(this.username);
+    this.convertAddress(this.locationSearch);
+  }
+
+  public setUsername(): void {
+    if(this.username){
+      this.user.username = this.username
+    }
+  }
+
+  public setLocation(item: any): void {
+    if(!item.lon || !item.lat || !item.display_name) {
+      console.log("Oops somethings gone wrong ... aborting")
+      return
+    }
+    this.user.startingLocation.long = item.lon;
+    this.user.startingLocation.lat = item.lat;
+    this.user.startingLocation.placeName = item.display_name;
+    console.log(this.user)
+  } 
+
+  public get saveDisabled(): boolean {
+    return this.user?.username === "" || 
+      !this.user?.startingLocation.long || 
+      !this.user?.startingLocation.lat || 
+      !this.user?.startingLocation.placeName;
+  }
+
+  public saveForm(): void {
+    // Save IUserData instance to localStorage then refresh page
+    localStorage.setItem('userData', JSON.stringify(this.user));
+    window.location.reload();
   }
 
   public async convertAddress(address: string): Promise<ICoordinates> {
@@ -109,7 +139,7 @@ export class AppComponent implements OnInit, AfterViewInit{
       placeName:   address
     }
 
-    this.https.get<IAddressDetails[]>(this.getQueryUrl(this.username)).subscribe(
+    this.https.get<IAddressDetails[]>(this.getQueryUrl(this.locationSearch)).subscribe(
       (response) => {
         console.log(this.apiResponse);
         this.apiResponse = response;

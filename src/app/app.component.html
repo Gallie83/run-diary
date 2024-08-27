@@ -78,7 +78,7 @@
   }
 
   .content {
-    display: flex;
+    display: block;
     justify-content: space-around;
     width: 100%;
     max-width: 700px;
@@ -194,10 +194,10 @@
   app-address-card {
     display: block;
     margin: 5px;
-  }
 
-  .app-address-card-content{
-    padding: 100px;
+    .content{
+      padding: 10px;
+    }
   }
 
 
@@ -270,20 +270,36 @@
   <div class="content" *ngIf="newUser">
     <!-- <mat-form-field>
       <mat-label>User Name</mat-label> -->
-      <div>user name</div>
+      <div>Username</div>
       <input
+      (change)="setUsername()"
         placeholder="some guy"
         [(ngModel)]=username
         required
     />
     <!-- </mat-form-field> -->
-    <button (click)="saveUserDetails()">enter location</button>
+  </div>
+  <div class="content" *ngIf="newUser">
+    <!-- <mat-form-field>
+      <mat-label>User Name</mat-label> -->
+      <div>Starting Location</div>
+      <input
+        placeholder="Search for your home address"
+        [(ngModel)]=locationSearch
+        required
+    />
+    <!-- </mat-form-field> -->
+    <button (click)="generateLocationList()">enter location</button>
   </div>
   <div class="location-cards">
     <div *ngFor="let item of apiResponse">
-      <app-address-card [addressDetails]="item"></app-address-card>
+      <app-address-card 
+        [addressDetails]="item"
+        (click)="setLocation(item)">
+      </app-address-card>
     </div>
   </div>
+  <button class="example-button-container" (click)="saveForm()" [disabled]="saveDisabled">Save Form</button>
 </main>
 
 
