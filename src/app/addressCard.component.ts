@@ -12,9 +12,10 @@ import { AppComponent } from './app.component';
   ],
   template: `
     <mat-card>
-  <mat-card-title>{{ addressDetails?.display_name }}</mat-card-title>
+  <mat-card-title>{{ addressDetails?.display_name ? addressDetails?.display_name : "Title" }}</mat-card-title>
   <mat-card-content>
-    <div>{{ addressDetails?.lat }}</div> 
+    <div>Lat:{{ addressDetails?.lat ? addressDetails?.lat: "0" }}</div> 
+    <div>Lon:{{ addressDetails?.lon ? addressDetails?.lon: "0" }}</div> 
   </mat-card-content>
 </mat-card>
   `,
