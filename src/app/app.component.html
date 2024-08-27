@@ -183,6 +183,24 @@
     width: 200px;
     margin: 10px 20px;
   }
+
+  .location-cards {
+    max-height: 800px;
+    overflow-x: auto;
+    /* justify-content: center; */
+    /* display: flex; */
+  }
+
+  app-address-card {
+    display: block;
+    margin: 5px;
+  }
+
+  .app-address-card-content{
+    padding: 100px;
+  }
+
+
 </style>
 
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -261,8 +279,10 @@
     <!-- </mat-form-field> -->
     <button (click)="saveUserDetails()">enter location</button>
   </div>
-  <div *ngFor="let item of apiResponse">
-    <app-address-card [addressDetails]="item"></app-address-card>
+  <div class="location-cards">
+    <div *ngFor="let item of apiResponse">
+      <app-address-card [addressDetails]="item"></app-address-card>
+    </div>
   </div>
 </main>
 
