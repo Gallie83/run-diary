@@ -70,7 +70,7 @@ export class AppComponent implements OnInit, AfterViewInit{
       let storage: any;
       try {
         storage = localStorage.getItem('userData');
-        if(storage !== "" && !storage ) {
+        if(storage !== "" && storage ) {
 
           storage = JSON.parse(storage);
           this.user = storage;
