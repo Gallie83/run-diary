@@ -1,7 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { NgFor } from '@angular/common';
-import { AppComponent } from './app.component';
 
 @Component({
   selector:    'app-address-card',

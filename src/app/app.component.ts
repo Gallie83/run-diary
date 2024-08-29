@@ -60,20 +60,41 @@ export class AppComponent implements OnInit, AfterViewInit{
       long:       0, 
       placeName:  ''
     }};
+  public firstGoal: IGoal = {
+    placeName: '',
+    progress: 0,
+    coords: {
+      lat: 0,
+      long: 0,
+      placeName: ''
+    },
+  }
   public newUser: boolean = false;
   public username: string = '';
   public locationSearch: string = '';
+  public addingGoal: boolean = false;
 
   public apiResponse: any = [];
+
+  // Check if user exists in local storage
   ngOnInit(): void {
       //Todo: update type
       let storage: any;
+      let userGoal: any;
       try {
         storage = localStorage.getItem('userData');
+        userGoal = localStorage.getItem('userGoal');
+        
+        console.log(storage)
         if(storage !== "" && storage ) {
 
           storage = JSON.parse(storage);
           this.user = storage;
+        }
+        if(userGoal) {
+          console.log(userGoal)
+          userGoal = JSON.parse(userGoal)
+          this.firstGoal = userGoal;
         }
       } catch (error) {
         console.log(error);
@@ -84,22 +105,41 @@ export class AppComponent implements OnInit, AfterViewInit{
       }
 
     console.log(this.user)
+    console.log(this.firstGoal)
   }
 
   ngAfterViewInit(): void {
-
     
   }
 
+  // Makes a Get request from Geocode API
   public getQueryUrl(searchTerm: string): string {
     const formattedSearch: string = searchTerm.replaceAll(' ', '+')
     return `https://geocode.maps.co/search?q=${formattedSearch}&api_key=${environment.apiKey}`;
   }
 
+  // Returns list of location based on user input
   public generateLocationList(): void {
-    
     this.convertAddress(this.locationSearch);
   }
+
+  public async convertAddress(address: string): Promise<ICoordinates> {
+
+    const valueToReturn: ICoordinates = {
+      lat:        0, 
+      long:       0, 
+      placeName:   address
+    }
+
+    this.https.get<IAddressDetails[]>(this.getQueryUrl(this.locationSearch)).subscribe(
+      (response) => {
+        console.log(this.apiResponse);
+        this.apiResponse = response;
+      });
+
+
+    return valueToReturn
+  } 
 
   public setUsername(): void {
     if(this.username){
@@ -131,23 +171,20 @@ export class AppComponent implements OnInit, AfterViewInit{
     window.location.reload();
   }
 
-  public async convertAddress(address: string): Promise<ICoordinates> {
-
-    const valueToReturn: ICoordinates = {
-      lat:        0, 
-      long:       0, 
-      placeName:   address
+  // User chosen location added as firstGoal 
+  public addGoal(item: any): void {
+    if(!item.lon || !item.lat || !item.display_name) {
+      console.log("Oops somethings gone wrong ... aborting")
+      return
     }
-
-    this.https.get<IAddressDetails[]>(this.getQueryUrl(this.locationSearch)).subscribe(
-      (response) => {
-        console.log(this.apiResponse);
-        this.apiResponse = response;
-      });
-
-
-    return valueToReturn
-  } 
+    this.firstGoal.coords.long = item.lon;
+    this.firstGoal.coords.lat = item.lat;
+    this.firstGoal.coords.placeName = item.display_name;
+    this.firstGoal.placeName = item.display_name;
+    console.log(this.firstGoal)
+    // Save IGoal instance to localStorage
+    localStorage.setItem('userGoal', JSON.stringify(this.firstGoal));
+  }
 }
 
 export interface ICoordinates {

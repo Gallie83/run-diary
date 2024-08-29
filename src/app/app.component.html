@@ -235,6 +235,8 @@
       <mat-card appearance="outlined">
         <mat-card-content>
           <div>Name: {{ this.user.username}}</div>
+          <div>Home location: {{ this.user.startingLocation.placeName}}</div>
+          <div>First Goal: {{ this.firstGoal.placeName ? this.firstGoal.placeName : 'No goals added yet'  }}</div>
           <div>Runs this week: 2</div>
           <div>Runs total: 44</div>
           <div>Total distance: 123km</div>
@@ -246,6 +248,24 @@
           <mat-icon>place</mat-icon>
           Add a Goal
         </a>
+      </div>
+      <!-- Todo: Hide First Goal component until 'Add a Goal' is clicked  -->
+      <div class="content" >
+          <div>First Goal</div>
+          <input
+            placeholder="Search for your first goal address"
+            [(ngModel)]=locationSearch
+            required
+        />
+        <button (click)="generateLocationList()">enter location</button>
+      </div>
+      <div class="location-cards">
+        <div *ngFor="let item of apiResponse">
+          <app-address-card 
+            [addressDetails]="item"
+            (click)="addGoal(item)">
+          </app-address-card>
+        </div>
       </div>
 
       <div class="example-button-container">
@@ -291,7 +311,7 @@
     <!-- </mat-form-field> -->
     <button (click)="generateLocationList()">enter location</button>
   </div>
-  <div class="location-cards">
+  <div class="location-cards" *ngIf="newUser">
     <div *ngFor="let item of apiResponse">
       <app-address-card 
         [addressDetails]="item"
@@ -299,7 +319,7 @@
       </app-address-card>
     </div>
   </div>
-  <button class="example-button-container" (click)="saveForm()" [disabled]="saveDisabled">Save Form</button>
+  <button *ngIf="newUser" class="example-button-container" (click)="saveForm()" [disabled]="saveDisabled">Save Form</button>
 </main>
 
 
