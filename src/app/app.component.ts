@@ -85,17 +85,16 @@ export class AppComponent implements OnInit, AfterViewInit{
         storage = localStorage.getItem('userData');
         userGoal = localStorage.getItem('userGoal');
         
-        console.log(storage)
         if(storage !== "" && storage ) {
-
           storage = JSON.parse(storage);
           this.user = storage;
         }
+
         if(userGoal) {
-          console.log(userGoal)
           userGoal = JSON.parse(userGoal)
           this.firstGoal = userGoal;
         }
+
       } catch (error) {
         console.log(error);
       }
@@ -171,8 +170,13 @@ export class AppComponent implements OnInit, AfterViewInit{
     window.location.reload();
   }
 
+  public addGoal(): void {
+    this.addingGoal = !this.addingGoal;
+    console.log(this.addingGoal);
+  }
+
   // User chosen location added as firstGoal 
-  public addGoal(item: any): void {
+  public setGoal(item: any): void {
     if(!item.lon || !item.lat || !item.display_name) {
       console.log("Oops somethings gone wrong ... aborting")
       return
@@ -182,8 +186,9 @@ export class AppComponent implements OnInit, AfterViewInit{
     this.firstGoal.coords.placeName = item.display_name;
     this.firstGoal.placeName = item.display_name;
     console.log(this.firstGoal)
-    // Save IGoal instance to localStorage
+    // Save IGoal instance to localStorage and hide First Goal component
     localStorage.setItem('userGoal', JSON.stringify(this.firstGoal));
+    this.addingGoal = false;
   }
 }
 
