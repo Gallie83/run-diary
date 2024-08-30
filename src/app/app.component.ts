@@ -75,7 +75,9 @@ export class AppComponent implements OnInit, AfterViewInit{
   public addingGoal: boolean = false;
 
   public apiResponse: any = [];
-  public distanceToGoal: number | string = 0;
+  public distanceToGoalKm: number | string = 0;
+  public distanceToGoalMi: number | string = 0;
+  public kilometers: boolean = true;
 
   // Check if user exists in local storage
   ngOnInit(): void {
@@ -99,8 +101,8 @@ export class AppComponent implements OnInit, AfterViewInit{
           const startingPosition = {lat:this.user.startingLocation.lat, lon:this.user.startingLocation.long}
           const endPosition = {lat:this.firstGoal.coords.lat, lon:this.firstGoal.coords.long}
 
-          this.distanceToGoal = geo.calculateDistance(startingPosition,endPosition)
-          console.log(this.distanceToGoal);
+          this.distanceToGoalKm = geo.calculateDistance(startingPosition,endPosition)
+          this.distanceToGoalMi = geo.calculateDistance(startingPosition,endPosition, {unit:'mi'});
         }
 
       } catch (error) {
@@ -182,7 +184,6 @@ export class AppComponent implements OnInit, AfterViewInit{
 
   public addGoal(): void {
     this.addingGoal = !this.addingGoal;
-    console.log(this.addingGoal);
   }
 
   // User chosen location added as firstGoal 
