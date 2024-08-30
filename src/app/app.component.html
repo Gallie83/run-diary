@@ -237,6 +237,7 @@
           <div>Name: {{ this.user.username}}</div>
           <div>Home location: {{ this.user.startingLocation.placeName}}</div>
           <div>First Goal: {{ this.firstGoal.placeName ? this.firstGoal.placeName : 'No goals added yet'  }}</div>
+          <div *ngIf="this.firstGoal">Distance to Goal: {{this.distanceToGoal}} Kilometers</div>
           <div>Runs this week: 2</div>
           <div>Runs total: 44</div>
           <div>Total distance: 123km</div>

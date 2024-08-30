@@ -15,7 +15,7 @@ import {HttpClientModule, HttpClient} from '@angular/common/http';
 import { Injectable } from  '@angular/core';
 import { AddressCardComponent, IAddressDetails } from './addressCard.component';
 
-// import  {geocoder} from 'geocoder';
+import NodeGeolocation from 'nodejs-geolocation';
 
 @Component({
   selector: 'app-root',
@@ -49,7 +49,7 @@ import { AddressCardComponent, IAddressDetails } from './addressCard.component';
 })
 export class AppComponent implements OnInit, AfterViewInit{
   constructor(private https: HttpClient) { }
-
+  
   title = 'run-diary';
 
   public user: IUserData  = {
@@ -75,12 +75,15 @@ export class AppComponent implements OnInit, AfterViewInit{
   public addingGoal: boolean = false;
 
   public apiResponse: any = [];
+  public distanceToGoal: number | string = 0;
 
   // Check if user exists in local storage
   ngOnInit(): void {
       //Todo: update type
       let storage: any;
       let userGoal: any;
+
+      const geo = new NodeGeolocation('MyApp')
       try {
         storage = localStorage.getItem('userData');
         userGoal = localStorage.getItem('userGoal');
@@ -93,6 +96,11 @@ export class AppComponent implements OnInit, AfterViewInit{
         if(userGoal) {
           userGoal = JSON.parse(userGoal)
           this.firstGoal = userGoal;
+          const startingPosition = {lat:this.user.startingLocation.lat, lon:this.user.startingLocation.long}
+          const endPosition = {lat:this.firstGoal.coords.lat, lon:this.firstGoal.coords.long}
+
+          this.distanceToGoal = geo.calculateDistance(startingPosition,endPosition)
+          console.log(this.distanceToGoal);
         }
 
       } catch (error) {
@@ -105,6 +113,8 @@ export class AppComponent implements OnInit, AfterViewInit{
 
     console.log(this.user)
     console.log(this.firstGoal)
+
+
   }
 
   ngAfterViewInit(): void {
@@ -200,7 +210,7 @@ export interface ICoordinates {
 
 export interface IGoal {
   placeName: string,
-  progress:  number,
+  progress:  number | string,
   coords:    ICoordinates
 }
 
