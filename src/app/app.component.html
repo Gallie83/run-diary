@@ -238,21 +238,20 @@
           <div>Home location: {{ this.user.startingLocation.placeName}}</div>
           <div>First Goal: {{ this.firstGoal.placeName ? this.firstGoal.placeName : 'No goals added yet'  }}</div>
           <div *ngIf="this.firstGoal">
-            <div *ngIf="this.kilometers">
-              Distance to Goal: {{this.distanceToGoalKm }} Kilometers
+            <div>
+              Distance to Goal: {{this.distanceToGoal }} {{ this.kilometers ? 'Kilometers' : 'Miles'}}
+              <button (click)="this.kilometers = !this.kilometers">{{ this.kilometers ? 'Km' : 'Mi'}}</button>
             </div>
-            <div *ngIf="!this.kilometers">
-              Distance to Goal: {{this.distanceToGoalMi }} Miles
-            </div>
-            <button (click)="this.kilometers = !this.kilometers">Km/Mi</button>
           </div>
           <div>Runs this week: 2</div>
           <div>Runs total: 44</div>
-          <div>Total distance: 123km</div>
+          <div>
+            Total Distance: {{ this.totalDistanceRan }} {{ this.kilometers ? 'Kilometers' : 'Miles'}}
+          </div>
         </mat-card-content>
       </mat-card>
 
-      <div class="example-button-container" (click)="addGoal()">
+      <div class="example-button-container" (click)="this.addingGoal = !this.addingGoal;">
         <a mat-fab extended routerLink=".">
           <mat-icon>place</mat-icon>
           Add a Goal
@@ -280,12 +279,25 @@
         </div>
       </div>  
 
-      <div class="example-button-container">
+      <div class="example-button-container" (click)="this.addingRun = !this.addingRun;">
         <a mat-fab extended routerLink=".">
           <mat-icon>directions_run</mat-icon>
           Log a Run
         </a>
       </div>
+
+      <!-- Div appears when logging a run -->
+      <div class="content" *ngIf="this.addingRun">
+          <div>How far did you run?</div>
+          <input
+          type="number"
+          placeholder="Run Distance"
+          required
+          [(ngModel)]="distanceRan"
+          />
+          <mat-icon (click)="this.kilometers = !this.kilometers">swap_horizontal_circle</mat-icon>
+          <button (click)="logRun(distanceRan)">Log in {{ this.kilometers ? 'Kilometers' : 'Miles'}}</button>
+      </div> 
 
       <!-- <mat-form-field>
         <mat-label>Enter a date range</mat-label>

@@ -72,12 +72,17 @@ export class AppComponent implements OnInit, AfterViewInit{
   public newUser: boolean = false;
   public username: string = '';
   public locationSearch: string = '';
+
   public addingGoal: boolean = false;
+  public addingRun: boolean = false;
 
   public apiResponse: any = [];
-  public distanceToGoalKm: number | string = 0;
-  public distanceToGoalMi: number | string = 0;
+  public distanceToGoal: number = 0;
   public kilometers: boolean = true;
+
+  public distanceRan: number = 0;
+
+  public totalDistanceRan: number = 0;
 
   // Check if user exists in local storage
   ngOnInit(): void {
@@ -86,23 +91,40 @@ export class AppComponent implements OnInit, AfterViewInit{
       let userGoal: any;
 
       const geo = new NodeGeolocation('MyApp')
+
       try {
         storage = localStorage.getItem('userData');
         userGoal = localStorage.getItem('userGoal');
         
+        // Checks if user has data in localStorage
         if(storage !== "" && storage ) {
           storage = JSON.parse(storage);
           this.user = storage;
         }
 
+        // Retrieves users goal data from storage and sets to firstGoal instance
         if(userGoal) {
           userGoal = JSON.parse(userGoal)
           this.firstGoal = userGoal;
+
+          // Calculates distance from startingLocation to firstGoal
           const startingPosition = {lat:this.user.startingLocation.lat, lon:this.user.startingLocation.long}
           const endPosition = {lat:this.firstGoal.coords.lat, lon:this.firstGoal.coords.long}
+          const calculatedDistance = geo.calculateDistance(startingPosition,endPosition)
 
-          this.distanceToGoalKm = geo.calculateDistance(startingPosition,endPosition)
-          this.distanceToGoalMi = geo.calculateDistance(startingPosition,endPosition, {unit:'mi'});
+          // Converts distanceToGoal to a number before saving
+            if (typeof calculatedDistance === 'string') {
+              const parsedDistance = parseFloat(calculatedDistance);
+              if (!isNaN(parsedDistance)) {
+                this.distanceToGoal = parsedDistance;
+              } else {
+                console.error('Invalid number format');
+              }
+            } else {
+              this.distanceToGoal = calculatedDistance;
+            }
+
+          
         }
 
       } catch (error) {
@@ -112,11 +134,6 @@ export class AppComponent implements OnInit, AfterViewInit{
       if (!storage) {
         this.newUser = true;
       }
-
-    console.log(this.user)
-    console.log(this.firstGoal)
-
-
   }
 
   ngAfterViewInit(): void {
@@ -152,6 +169,20 @@ export class AppComponent implements OnInit, AfterViewInit{
     return valueToReturn
   } 
 
+  // Distance numbers not changing when Km/Mi button is clicked
+  public distanceConverter(item: number | string):void {
+    if(!this.kilometers) {
+      this.distanceRan = 1.609344*this.distanceRan
+      this.distanceToGoal = 1.609344*this.distanceToGoal      
+      this.totalDistanceRan = 1.609344*this.totalDistanceRan
+    } 
+    if(this.kilometers) {
+      this.distanceRan = 1.609344*this.distanceRan
+      this.distanceToGoal = 0.621371*this.distanceToGoal      
+      this.totalDistanceRan = 0.621371*this.totalDistanceRan
+    }
+  }
+
   public setUsername(): void {
     if(this.username){
       this.user.username = this.username
@@ -166,26 +197,9 @@ export class AppComponent implements OnInit, AfterViewInit{
     this.user.startingLocation.long = item.lon;
     this.user.startingLocation.lat = item.lat;
     this.user.startingLocation.placeName = item.display_name;
-    console.log(this.user)
   } 
 
-  public get saveDisabled(): boolean {
-    return this.user?.username === "" || 
-      !this.user?.startingLocation.long || 
-      !this.user?.startingLocation.lat || 
-      !this.user?.startingLocation.placeName;
-  }
-
-  public saveForm(): void {
-    // Save IUserData instance to localStorage then refresh page
-    localStorage.setItem('userData', JSON.stringify(this.user));
-    window.location.reload();
-  }
-
-  public addGoal(): void {
-    this.addingGoal = !this.addingGoal;
-  }
-
+  
   // User chosen location added as firstGoal 
   public setGoal(item: any): void {
     if(!item.lon || !item.lat || !item.display_name) {
@@ -196,11 +210,32 @@ export class AppComponent implements OnInit, AfterViewInit{
     this.firstGoal.coords.lat = item.lat;
     this.firstGoal.coords.placeName = item.display_name;
     this.firstGoal.placeName = item.display_name;
-    console.log(this.firstGoal)
     // Save IGoal instance to localStorage and hide First Goal component
     localStorage.setItem('userGoal', JSON.stringify(this.firstGoal));
     this.addingGoal = false;
+    // window.location.reload();
   }
+  
+  public logRun(item: number): void {
+    this.distanceRan = item;
+    this.totalDistanceRan = this.totalDistanceRan + this.distanceRan
+    console.log(this.totalDistanceRan)
+  }
+  
+  // Stops user from submitting initial form if missing required fields
+  public get saveDisabled(): boolean {
+    return this.user?.username === "" || 
+      !this.user?.startingLocation.long || 
+      !this.user?.startingLocation.lat || 
+      !this.user?.startingLocation.placeName;
+  }
+  
+  public saveForm(): void {
+    // Save IUserData instance to localStorage then refresh page
+    localStorage.setItem('userData', JSON.stringify(this.user));
+    window.location.reload();
+  }
+  
 }
 
 export interface ICoordinates {
