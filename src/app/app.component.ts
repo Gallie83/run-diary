@@ -87,17 +87,19 @@ export class AppComponent implements OnInit, AfterViewInit{
 
   public distanceRan: number = 1;
 
-  // Check if user exists in local storage
   ngOnInit(): void {
-      //Todo: update type
-      let storage: any;
-      let userGoal: any;
-
-      const geo = new NodeGeolocation('MyApp')
-
+    //Todo: update type
+    let storage: any;
+    let userGoal: any;
+    let userRunningStats: any;
+    
+    const geo = new NodeGeolocation('MyApp')
+    
+    // Check if user exists in local storage
       try {
         storage = localStorage.getItem('userData');
         userGoal = localStorage.getItem('userGoal');
+        userRunningStats = localStorage.getItem('userRunningStats');
         
         // Checks if user has data in localStorage
         if(storage !== "" && storage ) {
@@ -126,6 +128,11 @@ export class AppComponent implements OnInit, AfterViewInit{
           } else {
             this.distanceToGoal = calculatedDistance;
           }
+        }
+
+        if(userRunningStats) {
+          userRunningStats = JSON.parse(userRunningStats);
+          this.runningStats = userRunningStats;
         }
       } catch (error) {
         console.log(error);
@@ -178,14 +185,18 @@ export class AppComponent implements OnInit, AfterViewInit{
   // Switch between Kilometers/Miles
   public distanceConverter():void {
     if(!this.kilometers) {
-      // this.distanceRan = Math.round(1.609344*this.distanceRan)
       this.distanceToGoal = Math.round(1.609344*this.distanceToGoal)
-      this.runningStats.totalDistanceRan = 1.609344*this.runningStats.totalDistanceRan
+      let distance = 0;
+      // Rounds totalDistanceRan to 2 decimal places
+      distance = 1.609344*this.runningStats.totalDistanceRan
+      this.runningStats.totalDistanceRan = Number(distance.toFixed(2))
     } 
     if(this.kilometers) {
-      // this.distanceRan = Math.round(1.609344*this.distanceRan)
       this.distanceToGoal = Math.round(0.621371*this.distanceToGoal)      
-      this.runningStats.totalDistanceRan = 0.621371*this.runningStats.totalDistanceRan
+      let distance = 0;
+      // Rounds totalDistanceRan to 2 decimal places
+      distance = 0.621371*this.runningStats.totalDistanceRan
+      this.runningStats.totalDistanceRan = Number(distance.toFixed(2))
     }
   }
 
@@ -218,10 +229,8 @@ export class AppComponent implements OnInit, AfterViewInit{
     // Save IGoal instance to localStorage and hide First Goal component
     localStorage.setItem('userGoal', JSON.stringify(this.firstGoal));
     this.addingGoal = false;
-    // window.location.reload();
   }
   
-  // TODO: Total distance number changes after mulitple presses of convertDistance()
   public logRun(item: number): void {
     if (this.distanceRan > 0) {
       // If in miles then change to kilometers before saving
@@ -230,12 +239,14 @@ export class AppComponent implements OnInit, AfterViewInit{
         console.log(this.distanceRan)
       }
       this.distanceRan = item;
+      // Adds distanceRan to totalDistanceRan and rounds to 2 decimal places
       this.runningStats.totalDistanceRan = this.runningStats.totalDistanceRan + this.distanceRan
-      this.runningStats.totalDistanceRan.toFixed(2)
+      this.runningStats.totalDistanceRan = Number(this.runningStats.totalDistanceRan.toFixed(2))
       this.runningStats.numberOfRuns++
+      // Closes Log a Run component and resets distanceRan before saving runningStats to localStorage
       this.addingRun = !this.addingRun;
       this.distanceRan = 1;
-      console.log(this.runningStats.totalDistanceRan)
+      localStorage.setItem('userRunningStats', JSON.stringify(this.runningStats));
     }
   }
   
