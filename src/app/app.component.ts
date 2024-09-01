@@ -69,6 +69,11 @@ export class AppComponent implements OnInit, AfterViewInit{
       placeName: ''
     },
   }
+  public runningStats: IRunningStats = {
+    totalDistanceRan: 0,
+    numberOfRuns: 0
+  }
+
   public newUser: boolean = false;
   public username: string = '';
   public locationSearch: string = '';
@@ -80,10 +85,7 @@ export class AppComponent implements OnInit, AfterViewInit{
   public distanceToGoal: number = 0;
   public kilometers: boolean = true;
 
-  public distanceRan: number = 0;
-
-  public totalDistanceRan: number = 0;
-  public numberOfRuns: number = 0;
+  public distanceRan: number = 1;
 
   // Check if user exists in local storage
   ngOnInit(): void {
@@ -170,19 +172,20 @@ export class AppComponent implements OnInit, AfterViewInit{
   public convertDistance(): void {
     this.kilometers = !this.kilometers;
     this.distanceConverter();
+    console.log(this.distanceRan)
   }
 
   // Switch between Kilometers/Miles
   public distanceConverter():void {
     if(!this.kilometers) {
-      this.distanceRan = Math.round(1.609344*this.distanceRan)
-      this.distanceToGoal = Math.round(1.609344*this.distanceToGoal)      
-      this.totalDistanceRan = Math.round(1.609344*this.totalDistanceRan)
+      // this.distanceRan = Math.round(1.609344*this.distanceRan)
+      this.distanceToGoal = Math.round(1.609344*this.distanceToGoal)
+      this.runningStats.totalDistanceRan = 1.609344*this.runningStats.totalDistanceRan
     } 
     if(this.kilometers) {
-      this.distanceRan = Math.round(1.609344*this.distanceRan)
+      // this.distanceRan = Math.round(1.609344*this.distanceRan)
       this.distanceToGoal = Math.round(0.621371*this.distanceToGoal)      
-      this.totalDistanceRan = Math.round(0.621371*this.totalDistanceRan)
+      this.runningStats.totalDistanceRan = 0.621371*this.runningStats.totalDistanceRan
     }
   }
 
@@ -202,7 +205,6 @@ export class AppComponent implements OnInit, AfterViewInit{
     this.user.startingLocation.placeName = item.display_name;
   } 
 
-  
   // User chosen location added as firstGoal 
   public setGoal(item: any): void {
     if(!item.lon || !item.lat || !item.display_name) {
@@ -219,12 +221,21 @@ export class AppComponent implements OnInit, AfterViewInit{
     // window.location.reload();
   }
   
+  // TODO: Total distance number changes after mulitple presses of convertDistance()
   public logRun(item: number): void {
-    if (this.distanceRan !== 0) {
+    if (this.distanceRan > 0) {
+      // If in miles then change to kilometers before saving
+      if(!this.kilometers) {
+        item = 1.609344*this.distanceRan;
+        console.log(this.distanceRan)
+      }
       this.distanceRan = item;
-      this.totalDistanceRan = this.totalDistanceRan + this.distanceRan
-      this.numberOfRuns++
-      console.log(this.totalDistanceRan)
+      this.runningStats.totalDistanceRan = this.runningStats.totalDistanceRan + this.distanceRan
+      this.runningStats.totalDistanceRan.toFixed(2)
+      this.runningStats.numberOfRuns++
+      this.addingRun = !this.addingRun;
+      this.distanceRan = 1;
+      console.log(this.runningStats.totalDistanceRan)
     }
   }
   
@@ -244,6 +255,8 @@ export class AppComponent implements OnInit, AfterViewInit{
   
 }
 
+// Interfaces
+
 export interface ICoordinates {
   lat:       number,
   long:      number,
@@ -261,4 +274,9 @@ export interface IUserData {
   totalDistance:    number,
   startingLocation: ICoordinates,
   goals?:           IGoal[]
+}
+
+export interface IRunningStats {
+  totalDistanceRan: number;
+  numberOfRuns:     number;
 }

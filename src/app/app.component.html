@@ -247,9 +247,9 @@
             </div>
           </div>
           <div>Runs this week: 2</div>
-          <div>Runs total: {{ this.numberOfRuns }}</div>
+          <div>Runs total: {{ this.runningStats.numberOfRuns }}</div>
           <div>
-            Total Distance: {{ this.totalDistanceRan }} {{ this.kilometers ? 'Kilometers' : 'Miles'}}
+            Total Distance: {{ this.runningStats.totalDistanceRan }} {{ this.kilometers ? 'Kilometers' : 'Miles'}}
           </div>
         </mat-card-content>
       </mat-card>
@@ -294,13 +294,13 @@
           <div>How far did you run?</div>
           <input
           type="number"
-          min="1"
-          value="10"
+          min="0.5"
+          value="{{this.distanceRan}}"
           placeholder="Run Distance"
           required
           [(ngModel)]="distanceRan"
           />
-          <mat-icon (click)="this.kilometers = !this.kilometers">swap_horizontal_circle</mat-icon>
+          <mat-icon (click)="convertDistance()">swap_horizontal_circle</mat-icon>
           <button (click)="logRun(distanceRan)">Log in {{ this.kilometers ? 'Kilometers' : 'Miles'}}</button>
       </div> 
 
