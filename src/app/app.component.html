@@ -234,17 +234,20 @@
 
       <mat-card appearance="outlined">
         <mat-card-content>
+          <button (click)="convertDistance()">
+            {{ this.kilometers ? 'Kilometers' : 'Miles'}}
+            <mat-icon>swap_horizontal_circle</mat-icon>
+          </button>
           <div>Name: {{ this.user.username}}</div>
           <div>Home location: {{ this.user.startingLocation.placeName}}</div>
           <div>First Goal: {{ this.firstGoal.placeName ? this.firstGoal.placeName : 'No goals added yet'  }}</div>
           <div *ngIf="this.firstGoal">
             <div>
-              Distance to Goal: {{this.distanceToGoal }} {{ this.kilometers ? 'Kilometers' : 'Miles'}}
-              <button (click)="this.kilometers = !this.kilometers">{{ this.kilometers ? 'Km' : 'Mi'}}</button>
+              Distance to Goal: {{ this.distanceToGoal }} {{ this.kilometers ? 'Kilometers' : 'Miles'}}
             </div>
           </div>
           <div>Runs this week: 2</div>
-          <div>Runs total: 44</div>
+          <div>Runs total: {{ this.numberOfRuns }}</div>
           <div>
             Total Distance: {{ this.totalDistanceRan }} {{ this.kilometers ? 'Kilometers' : 'Miles'}}
           </div>
@@ -291,6 +294,8 @@
           <div>How far did you run?</div>
           <input
           type="number"
+          min="1"
+          value="10"
           placeholder="Run Distance"
           required
           [(ngModel)]="distanceRan"

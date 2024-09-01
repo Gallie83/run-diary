@@ -83,6 +83,7 @@ export class AppComponent implements OnInit, AfterViewInit{
   public distanceRan: number = 0;
 
   public totalDistanceRan: number = 0;
+  public numberOfRuns: number = 0;
 
   // Check if user exists in local storage
   ngOnInit(): void {
@@ -113,20 +114,17 @@ export class AppComponent implements OnInit, AfterViewInit{
           const calculatedDistance = geo.calculateDistance(startingPosition,endPosition)
 
           // Converts distanceToGoal to a number before saving
-            if (typeof calculatedDistance === 'string') {
-              const parsedDistance = parseFloat(calculatedDistance);
-              if (!isNaN(parsedDistance)) {
-                this.distanceToGoal = parsedDistance;
-              } else {
-                console.error('Invalid number format');
-              }
+          if (typeof calculatedDistance === 'string') {
+            const parsedDistance = parseFloat(calculatedDistance);
+            if (!isNaN(parsedDistance)) {
+              this.distanceToGoal = parsedDistance;
             } else {
-              this.distanceToGoal = calculatedDistance;
+              console.error('Invalid number format');
             }
-
-          
+          } else {
+            this.distanceToGoal = calculatedDistance;
+          }
         }
-
       } catch (error) {
         console.log(error);
       }
@@ -169,17 +167,22 @@ export class AppComponent implements OnInit, AfterViewInit{
     return valueToReturn
   } 
 
-  // Distance numbers not changing when Km/Mi button is clicked
-  public distanceConverter(item: number | string):void {
+  public convertDistance(): void {
+    this.kilometers = !this.kilometers;
+    this.distanceConverter();
+  }
+
+  // Switch between Kilometers/Miles
+  public distanceConverter():void {
     if(!this.kilometers) {
-      this.distanceRan = 1.609344*this.distanceRan
-      this.distanceToGoal = 1.609344*this.distanceToGoal      
-      this.totalDistanceRan = 1.609344*this.totalDistanceRan
+      this.distanceRan = Math.round(1.609344*this.distanceRan)
+      this.distanceToGoal = Math.round(1.609344*this.distanceToGoal)      
+      this.totalDistanceRan = Math.round(1.609344*this.totalDistanceRan)
     } 
     if(this.kilometers) {
-      this.distanceRan = 1.609344*this.distanceRan
-      this.distanceToGoal = 0.621371*this.distanceToGoal      
-      this.totalDistanceRan = 0.621371*this.totalDistanceRan
+      this.distanceRan = Math.round(1.609344*this.distanceRan)
+      this.distanceToGoal = Math.round(0.621371*this.distanceToGoal)      
+      this.totalDistanceRan = Math.round(0.621371*this.totalDistanceRan)
     }
   }
 
@@ -217,9 +220,12 @@ export class AppComponent implements OnInit, AfterViewInit{
   }
   
   public logRun(item: number): void {
-    this.distanceRan = item;
-    this.totalDistanceRan = this.totalDistanceRan + this.distanceRan
-    console.log(this.totalDistanceRan)
+    if (this.distanceRan !== 0) {
+      this.distanceRan = item;
+      this.totalDistanceRan = this.totalDistanceRan + this.distanceRan
+      this.numberOfRuns++
+      console.log(this.totalDistanceRan)
+    }
   }
   
   // Stops user from submitting initial form if missing required fields
