@@ -183,7 +183,6 @@ export class AppComponent implements OnInit, AfterViewInit{
   public convertDistance(): void {
     this.kilometers = !this.kilometers;
     this.distanceConverter();
-    console.log(this.distanceRan)
   }
 
   // Switch between Kilometers/Miles
@@ -236,7 +235,6 @@ export class AppComponent implements OnInit, AfterViewInit{
     this.setUserGoal();
   }
   
-  // Todo: not logging in miles correctly
   public logRun(item: number): void {
     if (this.distanceRan > 0) {
       this.distanceRan = item;
@@ -244,12 +242,13 @@ export class AppComponent implements OnInit, AfterViewInit{
       this.runningStats.totalDistanceRan = this.runningStats.totalDistanceRan + this.distanceRan
       this.runningStats.totalDistanceRan = Number(this.runningStats.totalDistanceRan.toFixed(2))
       this.runningStats.numberOfRuns++
-      // If in miles then change to kilometers before saving
-      // if(!this.kilometers) {
-      //   this.runningStats.totalDistanceRan = 1.609344*this.runningStats.totalDistanceRan;
-      //   this.runningStats.totalDistanceRan = Number(this.runningStats.totalDistanceRan.toFixed(2))
-      // }
       localStorage.setItem('userRunningStats', JSON.stringify(this.runningStats));
+      // If in miles then change to kilometers before saving and then change it back
+      if(!this.kilometers) {
+        this.convertDistance()
+        localStorage.setItem('userRunningStats', JSON.stringify(this.runningStats));
+        this.convertDistance()
+      }
       // Closes Log a Run component and resets distanceRan
       this.addingRun = !this.addingRun;
       this.distanceRan = 1;
