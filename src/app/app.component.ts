@@ -90,15 +90,12 @@ export class AppComponent implements OnInit, AfterViewInit{
   ngOnInit(): void {
     //Todo: update type
     let storage: any;
-    let userGoal: any;
     let userRunningStats: any;
     
-    const geo = new NodeGeolocation('MyApp')
     
     // Check if user exists in local storage
       try {
         storage = localStorage.getItem('userData');
-        userGoal = localStorage.getItem('userGoal');
         userRunningStats = localStorage.getItem('userRunningStats');
         
         // Checks if user has data in localStorage
@@ -107,28 +104,7 @@ export class AppComponent implements OnInit, AfterViewInit{
           this.user = storage;
         }
 
-        // Retrieves users goal data from storage and sets to firstGoal instance
-        if(userGoal) {
-          userGoal = JSON.parse(userGoal)
-          this.firstGoal = userGoal;
-
-          // Calculates distance from startingLocation to firstGoal
-          const startingPosition = {lat:this.user.startingLocation.lat, lon:this.user.startingLocation.long}
-          const endPosition = {lat:this.firstGoal.coords.lat, lon:this.firstGoal.coords.long}
-          const calculatedDistance = geo.calculateDistance(startingPosition,endPosition)
-
-          // Converts distanceToGoal to a number before saving
-          if (typeof calculatedDistance === 'string') {
-            const parsedDistance = parseFloat(calculatedDistance);
-            if (!isNaN(parsedDistance)) {
-              this.distanceToGoal = parsedDistance;
-            } else {
-              console.error('Invalid number format');
-            }
-          } else {
-            this.distanceToGoal = calculatedDistance;
-          }
-        }
+        this.setUserGoal()
 
         if(userRunningStats) {
           userRunningStats = JSON.parse(userRunningStats);
@@ -145,6 +121,34 @@ export class AppComponent implements OnInit, AfterViewInit{
 
   ngAfterViewInit(): void {
     
+  }
+
+  public setUserGoal(): void {
+    let userGoal: any;
+    userGoal = localStorage.getItem('userGoal');
+    const geo = new NodeGeolocation('MyApp')
+    // Retrieves users goal data from storage and sets to firstGoal instance
+    if(userGoal) {
+      userGoal = JSON.parse(userGoal)
+      this.firstGoal = userGoal;
+
+      // Calculates distance from startingLocation to firstGoal
+      const startingPosition = {lat:this.user.startingLocation.lat, lon:this.user.startingLocation.long}
+      const endPosition = {lat:this.firstGoal.coords.lat, lon:this.firstGoal.coords.long}
+      const calculatedDistance = geo.calculateDistance(startingPosition,endPosition)
+
+      // Converts distanceToGoal to a number before saving
+      if (typeof calculatedDistance === 'string') {
+        const parsedDistance = parseFloat(calculatedDistance);
+        if (!isNaN(parsedDistance)) {
+          this.distanceToGoal = parsedDistance;
+        } else {
+          console.error('Invalid number format');
+        }
+      } else {
+        this.distanceToGoal = calculatedDistance;
+      }
+    }
   }
 
   // Makes a Get request from Geocode API
@@ -229,24 +233,26 @@ export class AppComponent implements OnInit, AfterViewInit{
     // Save IGoal instance to localStorage and hide First Goal component
     localStorage.setItem('userGoal', JSON.stringify(this.firstGoal));
     this.addingGoal = false;
+    this.setUserGoal();
   }
   
+  // Todo: not logging in miles correctly
   public logRun(item: number): void {
     if (this.distanceRan > 0) {
-      // If in miles then change to kilometers before saving
-      if(!this.kilometers) {
-        item = 1.609344*this.distanceRan;
-        console.log(this.distanceRan)
-      }
       this.distanceRan = item;
       // Adds distanceRan to totalDistanceRan and rounds to 2 decimal places
       this.runningStats.totalDistanceRan = this.runningStats.totalDistanceRan + this.distanceRan
       this.runningStats.totalDistanceRan = Number(this.runningStats.totalDistanceRan.toFixed(2))
       this.runningStats.numberOfRuns++
-      // Closes Log a Run component and resets distanceRan before saving runningStats to localStorage
+      // If in miles then change to kilometers before saving
+      // if(!this.kilometers) {
+      //   this.runningStats.totalDistanceRan = 1.609344*this.runningStats.totalDistanceRan;
+      //   this.runningStats.totalDistanceRan = Number(this.runningStats.totalDistanceRan.toFixed(2))
+      // }
+      localStorage.setItem('userRunningStats', JSON.stringify(this.runningStats));
+      // Closes Log a Run component and resets distanceRan
       this.addingRun = !this.addingRun;
       this.distanceRan = 1;
-      localStorage.setItem('userRunningStats', JSON.stringify(this.runningStats));
     }
   }
   
