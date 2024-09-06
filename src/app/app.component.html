@@ -273,15 +273,16 @@
           <button (click)="generateLocationList()">enter location</button>
         </div>
         <div class="location-cards">
-          <div *ngFor="let item of apiResponse">
-            <app-address-card 
-            [addressDetails]="item"
-            (click)="setGoal(item)">
-          </app-address-card>
+          <div *ngIf="this.noResultsFound">No Results found please try again</div>
+            <div *ngFor="let item of apiResponse">
+              <app-address-card 
+              [addressDetails]="item"
+              (click)="setGoal(item)">
+            </app-address-card>
           </div>
         </div>
       </div>  
-
+      
       <div class="example-button-container" (click)="this.addingRun = !this.addingRun;">
         <a mat-fab extended routerLink=".">
           <mat-icon>directions_run</mat-icon>
@@ -302,9 +303,9 @@
           />
           <mat-icon (click)="convertDistance()">swap_horizontal_circle</mat-icon>
           <button (click)="logRun(distanceRan)">Log in {{ this.kilometers ? 'Kilometers' : 'Miles'}}</button>
-      </div> 
-
-      <!-- <mat-form-field>
+        </div> 
+        
+        <!-- <mat-form-field>
         <mat-label>Enter a date range</mat-label>
         <mat-date-range-input [rangePicker]="picker">
           <input matStartDate placeholder="Start date">
@@ -313,7 +314,7 @@
         <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-date-range-picker #picker></mat-date-range-picker>
       </mat-form-field> -->
-
+      
     </div>
   </div>
   <div class="content" *ngIf="newUser">
@@ -322,10 +323,10 @@
       <div>Username</div>
       <input
       (change)="setUsername()"
-        placeholder="some guy"
-        [(ngModel)]=username
-        required
-    />
+      placeholder="some guy"
+      [(ngModel)]=username
+      required
+      />
     <!-- </mat-form-field> -->
   </div>
   <div class="content" *ngIf="newUser">
@@ -333,17 +334,18 @@
       <mat-label>User Name</mat-label> -->
       <div>Starting Location</div>
       <input
-        placeholder="Search for your home address"
-        [(ngModel)]=locationSearch
-        required
-    />
+      placeholder="Search for your home address"
+      [(ngModel)]=locationSearch
+      required
+      />
     <!-- </mat-form-field> -->
     <button (click)="generateLocationList()">enter location</button>
   </div>
   <div class="location-cards" *ngIf="newUser">
+    <div *ngIf="this.noResultsFound">No Results found please try again</div>
     <div *ngFor="let item of apiResponse">
       <app-address-card 
-        [addressDetails]="item"
+      [addressDetails]="item"
         (click)="setLocation(item)">
       </app-address-card>
     </div>

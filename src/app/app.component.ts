@@ -76,7 +76,9 @@ export class AppComponent implements OnInit, AfterViewInit{
 
   public newUser: boolean = false;
   public username: string = '';
+
   public locationSearch: string = '';
+  public noResultsFound: boolean = false;
 
   public addingGoal: boolean = false;
   public addingRun: boolean = false;
@@ -159,7 +161,12 @@ export class AppComponent implements OnInit, AfterViewInit{
 
   // Returns list of location based on user input
   public generateLocationList(): void {
+    this.noResultsFound = false;
     this.convertAddress(this.locationSearch);
+    // if(this.apiResponse = []) {
+    //   console.log('Nothing')
+    //   this.noResultsFound = true;
+    // }
   }
 
   public async convertAddress(address: string): Promise<ICoordinates> {
@@ -174,6 +181,11 @@ export class AppComponent implements OnInit, AfterViewInit{
       (response) => {
         console.log(this.apiResponse);
         this.apiResponse = response;
+        if(this.apiResponse.length === 0) {
+          console.log('Nothing')
+          this.noResultsFound = true;
+          console.log(this.noResultsFound)
+        }
       });
 
 
