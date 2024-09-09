@@ -241,6 +241,8 @@
           <div>Name: {{ this.user.username}}</div>
           <div>Home location: {{ this.user.startingLocation.placeName}}</div>
           <div>First Goal: {{ this.firstGoal.placeName ? this.firstGoal.placeName : 'No goals added yet'  }}</div>
+          <div *ngIf="this.secondGoal.coords.lat !== 0 && this.secondGoal.coords.long !== 0">Second Goal: {{ this.secondGoal.placeName  }}</div>
+          <div *ngIf="this.thirdGoal.coords.lat !== 0 && this.thirdGoal.coords.long !== 0">Third Goal: {{ this.thirdGoal.placeName  }}</div>
           <div *ngIf="this.firstGoal">
             <div>
               Distance to Goal: {{ this.distanceToGoal }} {{ this.kilometers ? 'Kilometers' : 'Miles'}}
@@ -273,7 +275,9 @@
           <button (click)="generateLocationList()">enter location</button>
         </div>
         <div class="location-cards">
+          <!-- If no results for locationSearch -->
           <div *ngIf="this.noResultsFound">No Results found please try again</div>
+            <!-- Displays locationSearch results -->
             <div *ngFor="let item of apiResponse">
               <app-address-card 
               [addressDetails]="item"
@@ -342,14 +346,16 @@
     <button (click)="generateLocationList()">enter location</button>
   </div>
   <div class="location-cards" *ngIf="newUser">
+    <!-- If no results for locationSearch -->
     <div *ngIf="this.noResultsFound">No Results found please try again</div>
-    <div *ngFor="let item of apiResponse">
-      <app-address-card 
-      [addressDetails]="item"
-        (click)="setLocation(item)">
-      </app-address-card>
+      <!-- Displays locationSearch results -->
+      <div *ngFor="let item of apiResponse">
+        <app-address-card 
+        [addressDetails]="item"
+          (click)="setLocation(item)">
+        </app-address-card>
+      </div>
     </div>
-  </div>
   <button *ngIf="newUser" class="example-button-container" (click)="saveForm()" [disabled]="saveDisabled">Save Form</button>
 </main>
 

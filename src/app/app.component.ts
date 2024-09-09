@@ -69,6 +69,24 @@ export class AppComponent implements OnInit, AfterViewInit{
       placeName: ''
     },
   }
+  public secondGoal: IGoal = {
+    placeName: '',
+    progress: 0,
+    coords: {
+      lat: 0,
+      long: 0,
+      placeName: ''
+    },
+  }
+  public thirdGoal: IGoal = {
+    placeName: '',
+    progress: 0,
+    coords: {
+      lat: 0,
+      long: 0,
+      placeName: ''
+    },
+  }
   public runningStats: IRunningStats = {
     totalDistanceRan: 0,
     numberOfRuns: 0
@@ -163,10 +181,6 @@ export class AppComponent implements OnInit, AfterViewInit{
   public generateLocationList(): void {
     this.noResultsFound = false;
     this.convertAddress(this.locationSearch);
-    // if(this.apiResponse = []) {
-    //   console.log('Nothing')
-    //   this.noResultsFound = true;
-    // }
   }
 
   public async convertAddress(address: string): Promise<ICoordinates> {
@@ -182,9 +196,7 @@ export class AppComponent implements OnInit, AfterViewInit{
         console.log(this.apiResponse);
         this.apiResponse = response;
         if(this.apiResponse.length === 0) {
-          console.log('Nothing')
           this.noResultsFound = true;
-          console.log(this.noResultsFound)
         }
       });
 
@@ -237,12 +249,24 @@ export class AppComponent implements OnInit, AfterViewInit{
       console.log("Oops somethings gone wrong ... aborting")
       return
     }
-    this.firstGoal.coords.long = item.lon;
-    this.firstGoal.coords.lat = item.lat;
-    this.firstGoal.coords.placeName = item.display_name;
-    this.firstGoal.placeName = item.display_name;
-    // Save IGoal instance to localStorage and hide First Goal component
-    localStorage.setItem('userGoal', JSON.stringify(this.firstGoal));
+
+    let goal = this.firstGoal;
+    
+    if(this.firstGoal.coords.lat !== 0 && this.firstGoal.coords.long !== 0) {
+      goal = this.secondGoal
+      console.log(goal)
+      console.log(this.secondGoal)
+    } else if (this.secondGoal.coords.lat !== 0 && this.secondGoal.coords.long !== 0) {
+      console.log(3)
+      goal = this.thirdGoal
+      console.log(goal)
+    }
+    goal.coords.long = item.lon;
+    goal.coords.lat = item.lat;
+    goal.coords.placeName = item.display_name;
+    goal.placeName = item.display_name;
+    // Save IGoal instance to localStorage and hide Add a Goal component
+    localStorage.setItem('userGoal', JSON.stringify(goal));
     this.addingGoal = false;
     this.setUserGoal();
   }
