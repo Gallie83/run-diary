@@ -207,28 +207,6 @@
 
 <main class="main">
   <div class="content" *ngIf="!newUser">
-    <div class="left-side">
-      <mat-card appearance="outlined">
-        <mat-card-content>
-          <div>Goal: Location 1</div>
-          <mat-progress-bar mode="determinate" value="60"></mat-progress-bar>
-        </mat-card-content>
-      </mat-card>
-
-      <mat-card appearance="outlined">
-        <mat-card-content>
-          <div>Goal: Location 2</div>
-          <mat-progress-bar mode="determinate" value="20"></mat-progress-bar>
-        </mat-card-content>
-      </mat-card>
-
-      <mat-card appearance="outlined">
-        <mat-card-content>
-          <div>Goal: Location 3</div>
-          <mat-progress-bar mode="determinate" value="5"></mat-progress-bar>
-        </mat-card-content>
-      </mat-card>
-    </div>
     <div class="divider" role="separator" aria-label="Divider"></div>
     <div class="right-side">
 
@@ -240,18 +218,18 @@
           </button>
           <div>Name: {{ this.user.username}}</div>
           <div>Home location: {{ this.user.startingLocation.placeName}}</div>
-          <div>First Goal: {{ this.firstGoal.placeName ? this.firstGoal.placeName : 'No goals added yet'  }}</div>
-          <div *ngIf="this.secondGoal.coords.lat !== 0 && this.secondGoal.coords.long !== 0">Second Goal: {{ this.secondGoal.placeName  }}</div>
-          <div *ngIf="this.thirdGoal.coords.lat !== 0 && this.thirdGoal.coords.long !== 0">Third Goal: {{ this.thirdGoal.placeName  }}</div>
-          <div *ngIf="this.firstGoal">
-            <div>
-              Distance to Goal: {{ this.distanceToGoal }} {{ this.kilometers ? 'Kilometers' : 'Miles'}}
-            </div>
+          <div *ngFor="let goal of user.goals">
+            <mat-card appearance="outlined">
+              <mat-card-content>
+                <div>Goal: {{goal.placeName}}</div>
+                <div>Distance: {{getDisplayDistance(goal.distance)}}</div>
+                <mat-progress-bar mode="determinate" value="20"></mat-progress-bar>
+              </mat-card-content>
+            </mat-card>
           </div>
-          <!-- <div>Runs this week: 2</div> -->
           <div>Runs total: {{ this.runningStats.numberOfRuns }}</div>
           <div>
-            Total Distance: {{ this.runningStats.totalDistanceRan }} {{ this.kilometers ? 'Kilometers' : 'Miles'}}
+            Total Distance: {{ getDisplayDistance(this.runningStats.totalDistanceRan) }}
           </div>
         </mat-card-content>
       </mat-card>

@@ -59,26 +59,10 @@ export class AppComponent implements OnInit, AfterViewInit{
       lat:        0, 
       long:       0, 
       placeName:  ''
-    }};
-  public firstGoal: IGoal = {
-    placeName: '',
-    progress: 0,
-    coords: {
-      lat: 0,
-      long: 0,
-      placeName: ''
     },
-  }
-  public secondGoal: IGoal = {
-    placeName: '',
-    progress: 0,
-    coords: {
-      lat: 0,
-      long: 0,
-      placeName: ''
-    },
-  }
-  public thirdGoal: IGoal = {
+    goals: []
+  };
+  public currentGoal: IGoal = {
     placeName: '',
     progress: 0,
     coords: {
@@ -124,7 +108,7 @@ export class AppComponent implements OnInit, AfterViewInit{
           this.user = storage;
         }
 
-        this.setUserGoal()
+        this.hydrateUserGoals()
 
         if(userRunningStats) {
           userRunningStats = JSON.parse(userRunningStats);
@@ -143,32 +127,30 @@ export class AppComponent implements OnInit, AfterViewInit{
     
   }
 
-  public setUserGoal(): void {
-    let userGoal: any;
-    userGoal = localStorage.getItem('userGoal');
-    const geo = new NodeGeolocation('MyApp')
-    // Retrieves users goal data from storage and sets to firstGoal instance
-    if(userGoal) {
-      userGoal = JSON.parse(userGoal)
-      this.firstGoal = userGoal;
-
-      // Calculates distance from startingLocation to firstGoal
-      const startingPosition = {lat:this.user.startingLocation.lat, lon:this.user.startingLocation.long}
-      const endPosition = {lat:this.firstGoal.coords.lat, lon:this.firstGoal.coords.long}
-      const calculatedDistance = geo.calculateDistance(startingPosition,endPosition)
-
-      // Converts distanceToGoal to a number before saving
-      if (typeof calculatedDistance === 'string') {
-        const parsedDistance = parseFloat(calculatedDistance);
-        if (!isNaN(parsedDistance)) {
-          this.distanceToGoal = parsedDistance;
-        } else {
-          console.error('Invalid number format');
-        }
-      } else {
-        this.distanceToGoal = calculatedDistance;
-      }
+  public hydrateUserGoals(): void {
+    if(this.user.goals.length === 0) {
+      return
     }
+    const geo = new NodeGeolocation('MyApp');
+    this.user.goals.forEach( (goal: IGoal) => {
+      if(goal.distance) {
+        return
+      }
+      const startingPosition = {lat:this.user.startingLocation.lat, lon:this.user.startingLocation.long}
+      const endPosition = {lat:goal.coords.lat, lon:goal.coords.long}
+      const calculatedDistance = geo.calculateDistance(startingPosition,endPosition)
+        // Converts distanceToGoal to a number before saving
+        if (typeof calculatedDistance === 'string') {
+          const parsedDistance = parseFloat(calculatedDistance);
+          if (!isNaN(parsedDistance)) {
+            goal.distance = parsedDistance;
+          } else {
+            console.error('Invalid number format');
+          }
+        } else {
+          goal.distance = calculatedDistance;
+        }
+    })
   }
 
   // Makes a Get request from Geocode API
@@ -206,26 +188,18 @@ export class AppComponent implements OnInit, AfterViewInit{
 
   public convertDistance(): void {
     this.kilometers = !this.kilometers;
-    this.distanceConverter();
   }
 
-  // Switch between Kilometers/Miles
-  public distanceConverter():void {
-    if(!this.kilometers) {
-      this.distanceToGoal = Math.round(1.609344*this.distanceToGoal)
-      let distance = 0;
-      // Rounds totalDistanceRan to 2 decimal places
-      distance = 1.609344*this.runningStats.totalDistanceRan
-      this.runningStats.totalDistanceRan = Number(distance.toFixed(2))
-    } 
-    if(this.kilometers) {
-      this.distanceToGoal = Math.round(0.621371*this.distanceToGoal)      
-      let distance = 0;
-      // Rounds totalDistanceRan to 2 decimal places
-      distance = 0.621371*this.runningStats.totalDistanceRan
-      this.runningStats.totalDistanceRan = Number(distance.toFixed(2))
+  public getDisplayDistance(distanceInKm: number | undefined): string {
+    if(distanceInKm === 0 || distanceInKm === undefined) {
+      return this.kilometers ? '0Km' : '0 Miles'
     }
-  }
+
+    return  this.kilometers ? distanceInKm.toString()+'Km' : (0.621371*distanceInKm).toFixed(2)+' Miles'
+    // // Rounds totalDistanceRan to 2 decimal places
+    // distance = 0.621371*this.runningStats.totalDistanceRan
+    // this.runningStats.totalDistanceRan = Number(distance.toFixed(2))
+  } 
 
   public setUsername(): void {
     if(this.username){
@@ -249,26 +223,35 @@ export class AppComponent implements OnInit, AfterViewInit{
       console.log("Oops somethings gone wrong ... aborting")
       return
     }
-
-    let goal = this.firstGoal;
-    
-    if(this.firstGoal.coords.lat !== 0 && this.firstGoal.coords.long !== 0) {
-      goal = this.secondGoal
-      console.log(goal)
-      console.log(this.secondGoal)
-    } else if (this.secondGoal.coords.lat !== 0 && this.secondGoal.coords.long !== 0) {
-      console.log(3)
-      goal = this.thirdGoal
-      console.log(goal)
-    }
-    goal.coords.long = item.lon;
-    goal.coords.lat = item.lat;
-    goal.coords.placeName = item.display_name;
-    goal.placeName = item.display_name;
-    // Save IGoal instance to localStorage and hide Add a Goal component
-    localStorage.setItem('userGoal', JSON.stringify(goal));
+    this._setCurrentGoal(item);
+    this.user.goals.push(this.currentGoal);
     this.addingGoal = false;
-    this.setUserGoal();
+    this._resetCurrentGoal();
+    this.hydrateUserGoals();
+    this._updateUserData();
+  }
+
+  private _updateUserData(): void {
+    localStorage.setItem('userData', JSON.stringify(this.user))
+  }
+
+  private _setCurrentGoal(item: any): void {
+    this.currentGoal.coords.long = item.lon;
+    this.currentGoal.coords.lat = item.lat;
+    this.currentGoal.coords.placeName = item.display_name;
+    this.currentGoal.placeName = item.display_name;
+  } 
+
+  private _resetCurrentGoal(): void {
+    this.currentGoal = {
+      placeName: '',
+      progress: 0,
+      coords: {
+        lat: 0,
+        long: 0,
+        placeName: ''
+      },
+    }
   }
   
   public logRun(item: number): void {
@@ -318,14 +301,16 @@ export interface ICoordinates {
 export interface IGoal {
   placeName: string,
   progress:  number | string,
-  coords:    ICoordinates
+  coords:    ICoordinates,
+  // Measured in Km
+  distance?: number
 }
 
 export interface IUserData {
   username:         string,
   totalDistance:    number,
   startingLocation: ICoordinates,
-  goals?:           IGoal[]
+  goals:           IGoal[],
 }
 
 export interface IRunningStats {
