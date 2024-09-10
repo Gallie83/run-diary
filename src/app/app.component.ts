@@ -153,6 +153,15 @@ export class AppComponent implements OnInit, AfterViewInit{
     })
   }
 
+  // Returns percentage of progress user has made to a goal 
+  public getUserGoalProgress(goalDistance:number | undefined, totalDistance: number): number {
+    if(goalDistance === undefined) {
+      goalDistance = 0;
+    }
+    const progress = (totalDistance/goalDistance)*100
+    return Math.min(progress, 100);
+  }
+
   // Makes a Get request from Geocode API
   public getQueryUrl(searchTerm: string): string {
     const formattedSearch: string = searchTerm.replaceAll(' ', '+')
@@ -199,8 +208,6 @@ export class AppComponent implements OnInit, AfterViewInit{
     return  this.kilometers ? distanceInKm.toString()+'Km' : (0.621371*distanceInKm).toFixed(2)+' Miles'
   } 
 
-  
-  // User chosen location added as firstGoal 
   public setGoal(item: any): void {
     if(!item.lon || !item.lat || !item.display_name) {
       console.log("Oops somethings gone wrong ... aborting")

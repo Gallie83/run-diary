@@ -223,7 +223,7 @@
               <mat-card-content>
                 <div>Goal: {{goal.placeName}}</div>
                 <div>Distance: {{getDisplayDistance(goal.distance)}}</div>
-                <mat-progress-bar mode="determinate" value="20"></mat-progress-bar>
+                <mat-progress-bar mode="determinate" value="{{ getUserGoalProgress(goal.distance, this.runningStats.totalDistanceRan)}}"></mat-progress-bar>
               </mat-card-content>
             </mat-card>
           </div>
