@@ -190,16 +190,77 @@ export class AppComponent implements OnInit, AfterViewInit{
     this.kilometers = !this.kilometers;
   }
 
+  // Returns string to display distance value either in Km or Miles 
   public getDisplayDistance(distanceInKm: number | undefined): string {
     if(distanceInKm === 0 || distanceInKm === undefined) {
       return this.kilometers ? '0Km' : '0 Miles'
     }
 
     return  this.kilometers ? distanceInKm.toString()+'Km' : (0.621371*distanceInKm).toFixed(2)+' Miles'
-    // // Rounds totalDistanceRan to 2 decimal places
-    // distance = 0.621371*this.runningStats.totalDistanceRan
-    // this.runningStats.totalDistanceRan = Number(distance.toFixed(2))
   } 
+
+  
+  // User chosen location added as firstGoal 
+  public setGoal(item: any): void {
+    if(!item.lon || !item.lat || !item.display_name) {
+      console.log("Oops somethings gone wrong ... aborting")
+      return
+    }
+    // Sets item as currentGoal and adds to user.goals array
+    this._setCurrentGoal(item);
+    this.user.goals.push(this.currentGoal);
+    
+    this.addingGoal = false;
+    // Resets currentGoal and saves user.goals array to localStorage
+    this._resetCurrentGoal();
+    this.hydrateUserGoals();
+    this._updateUserData();
+  }
+  
+  private _updateUserData(): void {
+    localStorage.setItem('userData', JSON.stringify(this.user))
+  }
+  
+  private _setCurrentGoal(item: any): void {
+    this.currentGoal.coords.long = item.lon;
+    this.currentGoal.coords.lat = item.lat;
+    this.currentGoal.coords.placeName = item.display_name;
+    this.currentGoal.placeName = item.display_name;
+  } 
+  
+  private _resetCurrentGoal(): void {
+    this.currentGoal = {
+      placeName: '',
+      progress: 0,
+      coords: {
+        lat: 0,
+        long: 0,
+        placeName: ''
+      },
+    }
+  }
+  
+  public logRun(item: number): void {
+    if (this.distanceRan > 0) {
+      this.distanceRan = item;
+      // console.log(this.distanceRan + ' 1st')
+      // If in miles then calculate value before adding to totalDistanceRan
+      if(!this.kilometers) {
+        this.distanceRan = Number((item*1.60934).toFixed(2))
+        console.log(this.distanceRan)
+      }
+      // Adds distanceRan to totalDistanceRan and rounds to 2 decimal places
+      this.runningStats.totalDistanceRan = this.runningStats.totalDistanceRan + this.distanceRan
+      this.runningStats.totalDistanceRan = Number(this.runningStats.totalDistanceRan.toFixed(2))
+      this.runningStats.numberOfRuns++
+      localStorage.setItem('userRunningStats', JSON.stringify(this.runningStats));
+      // Closes Log a Run component and resets distanceRan
+      this.addingRun = !this.addingRun;
+      this.distanceRan = 1;
+    }
+  }
+  
+  // Initial User info form logic
 
   public setUsername(): void {
     if(this.username){
@@ -217,63 +278,6 @@ export class AppComponent implements OnInit, AfterViewInit{
     this.user.startingLocation.placeName = item.display_name;
   } 
 
-  // User chosen location added as firstGoal 
-  public setGoal(item: any): void {
-    if(!item.lon || !item.lat || !item.display_name) {
-      console.log("Oops somethings gone wrong ... aborting")
-      return
-    }
-    this._setCurrentGoal(item);
-    this.user.goals.push(this.currentGoal);
-    this.addingGoal = false;
-    this._resetCurrentGoal();
-    this.hydrateUserGoals();
-    this._updateUserData();
-  }
-
-  private _updateUserData(): void {
-    localStorage.setItem('userData', JSON.stringify(this.user))
-  }
-
-  private _setCurrentGoal(item: any): void {
-    this.currentGoal.coords.long = item.lon;
-    this.currentGoal.coords.lat = item.lat;
-    this.currentGoal.coords.placeName = item.display_name;
-    this.currentGoal.placeName = item.display_name;
-  } 
-
-  private _resetCurrentGoal(): void {
-    this.currentGoal = {
-      placeName: '',
-      progress: 0,
-      coords: {
-        lat: 0,
-        long: 0,
-        placeName: ''
-      },
-    }
-  }
-  
-  public logRun(item: number): void {
-    if (this.distanceRan > 0) {
-      this.distanceRan = item;
-      // Adds distanceRan to totalDistanceRan and rounds to 2 decimal places
-      this.runningStats.totalDistanceRan = this.runningStats.totalDistanceRan + this.distanceRan
-      this.runningStats.totalDistanceRan = Number(this.runningStats.totalDistanceRan.toFixed(2))
-      this.runningStats.numberOfRuns++
-      localStorage.setItem('userRunningStats', JSON.stringify(this.runningStats));
-      // If in miles then change to kilometers before saving and then change it back
-      if(!this.kilometers) {
-        this.convertDistance()
-        localStorage.setItem('userRunningStats', JSON.stringify(this.runningStats));
-        this.convertDistance()
-      }
-      // Closes Log a Run component and resets distanceRan
-      this.addingRun = !this.addingRun;
-      this.distanceRan = 1;
-    }
-  }
-  
   // Stops user from submitting initial form if missing required fields
   public get saveDisabled(): boolean {
     return this.user?.username === "" || 
@@ -287,7 +291,6 @@ export class AppComponent implements OnInit, AfterViewInit{
     localStorage.setItem('userData', JSON.stringify(this.user));
     window.location.reload();
   }
-  
 }
 
 // Interfaces
