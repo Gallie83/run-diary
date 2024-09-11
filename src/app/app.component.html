@@ -200,6 +200,44 @@
     }
   }
 
+  .align-right {
+    text-align: right;
+    margin-bottom: 5px;
+  }
+
+  .goals-tabs {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    margin-top: 20px; /* Add space between the previous content and the tab group */
+    background-color: #f5f5f5; /* Light background to make the content inside pop */
+    border-radius: 8px; /* Rounded corners for a softer look */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    min-height: 400px; /* Ensure a minimum height, even if content is empty */
+    max-height: 600px; /* Set a max height to prevent the content from overflowing */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds max height */
+    padding: 16px;
+  }
+
+  .goal-div {
+   background-color: green;
+   margin: 2%;
+   border-radius: 25px;/
+  }
+  
+  .goal-info { 
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 5px;
+  }
+  
+  .completed {
+    text-align: center;
+    font-size: large;
+    font-weight: bold;
+    color:white; 
+    cursor: pointer;
+  }
+
 
 </style>
 
@@ -208,25 +246,37 @@
 <main class="main">
   <div class="content" *ngIf="!newUser">
     <div class="divider" role="separator" aria-label="Divider"></div>
-    <div class="right-side">
+    <div>
 
       <mat-card appearance="outlined">
         <mat-card-content>
-          <button (click)="convertDistance()">
-            {{ this.kilometers ? 'Kilometers' : 'Miles'}}
-            <mat-icon>swap_horizontal_circle</mat-icon>
-          </button>
+          <mat-slide-toggle (click)="convertDistance()">
+            {{ this.kilometers ? 'Km' : 'Mi'}}
+          </mat-slide-toggle>
           <div>Name: {{ this.user.username}}</div>
           <div>Home location: {{ this.user.startingLocation.placeName}}</div>
-          <div *ngFor="let goal of user.goals">
-            <mat-card appearance="outlined">
-              <mat-card-content>
-                <div>Goal: {{goal.placeName}}</div>
-                <div>Distance: {{getDisplayDistance(goal.distance)}}</div>
-                <mat-progress-bar mode="determinate" value="{{ getUserGoalProgress(goal.distance, this.runningStats.totalDistanceRan)}}"></mat-progress-bar>
-              </mat-card-content>
-            </mat-card>
-          </div>
+          <!-- Goal cards -->
+
+          <mat-tab-group class="goals-tabs">
+            <mat-tab label="Active Goals"> 
+              <div class="goal-div" *ngFor="let goal of user.goals">
+                  <mat-card appearance="outlined">
+                    <mat-card-content>
+                      <div>Goal: {{goal.placeName}}</div>
+                      <div class="goal-info">
+                        <div>Distance: {{getDisplayDistance(goal.distance)}}</div>
+                        <div class="align-right">{{goal.progress}}%</div>
+                    </div>
+                    <mat-progress-bar mode="determinate" value="{{ goal.progress }}"></mat-progress-bar>
+                  </mat-card-content>
+                </mat-card>
+                <div (click)="setGoalCompleted(goal)" class="completed" *ngIf="goal.progress === 100">GOAL COMPLETED!</div>
+            </div>
+
+              <mat-tab label="Completed Goals"> Completed Goals go here </mat-tab>
+            </mat-tab>
+          </mat-tab-group>
+
           <div>Runs total: {{ this.runningStats.numberOfRuns }}</div>
           <div>
             Total Distance: {{ getDisplayDistance(this.runningStats.totalDistanceRan) }}

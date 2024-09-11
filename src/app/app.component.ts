@@ -1,10 +1,12 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { MatCardModule } from '@angular/material/card';
+import {MatTabsModule} from '@angular/material/tabs';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatDatepickerModule, MatStartDate} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
 import { NgFor, NgIf } from '@angular/common';
@@ -26,6 +28,8 @@ import NodeGeolocation from 'nodejs-geolocation';
     NgIf,
     NgFor,
     RouterOutlet,
+    MatTabsModule,
+    MatSlideToggleModule,
     MatCardModule,
     MatProgressBarModule,
     MatButtonModule,
@@ -36,6 +40,7 @@ import NodeGeolocation from 'nodejs-geolocation';
     AddressCardComponent
   ],
   providers: [  
+    MatSlideToggleModule,
     MatDatepickerModule,
     MatNativeDateModule  
   ],
@@ -70,6 +75,7 @@ export class AppComponent implements OnInit, AfterViewInit{
       long: 0,
       placeName: ''
     },
+    completed: false,
   }
   public runningStats: IRunningStats = {
     totalDistanceRan: 0,
@@ -108,12 +114,12 @@ export class AppComponent implements OnInit, AfterViewInit{
           this.user = storage;
         }
 
-        this.hydrateUserGoals()
-
         if(userRunningStats) {
           userRunningStats = JSON.parse(userRunningStats);
           this.runningStats = userRunningStats;
         }
+
+        this.hydrateUserGoals()
       } catch (error) {
         console.log(error);
       }
@@ -133,12 +139,15 @@ export class AppComponent implements OnInit, AfterViewInit{
     }
     const geo = new NodeGeolocation('MyApp');
     this.user.goals.forEach( (goal: IGoal) => {
+      // Calculate user progress for each goal
+      goal.progress = this.getUserGoalProgress(goal.distance, this.runningStats.totalDistanceRan);
       if(goal.distance) {
         return
       }
       const startingPosition = {lat:this.user.startingLocation.lat, lon:this.user.startingLocation.long}
       const endPosition = {lat:goal.coords.lat, lon:goal.coords.long}
       const calculatedDistance = geo.calculateDistance(startingPosition,endPosition)
+      console.log('hello')
         // Converts distanceToGoal to a number before saving
         if (typeof calculatedDistance === 'string') {
           const parsedDistance = parseFloat(calculatedDistance);
@@ -150,16 +159,25 @@ export class AppComponent implements OnInit, AfterViewInit{
         } else {
           goal.distance = calculatedDistance;
         }
-    })
+      }
+    )
+    console.log(this.user.goals)
   }
 
   // Returns percentage of progress user has made to a goal 
   public getUserGoalProgress(goalDistance:number | undefined, totalDistance: number): number {
+    console.log(goalDistance,totalDistance)
     if(goalDistance === undefined) {
       goalDistance = 0;
     }
-    const progress = (totalDistance/goalDistance)*100
+    const progress = Number(((totalDistance/goalDistance)*100).toFixed(2))
     return Math.min(progress, 100);
+  }
+
+  public setGoalCompleted(goal: IGoal): void {
+    this.currentGoal = goal;
+    this.currentGoal.completed = true;
+    console.log(this.currentGoal.completed)
   }
 
   // Makes a Get request from Geocode API
@@ -244,6 +262,7 @@ export class AppComponent implements OnInit, AfterViewInit{
         long: 0,
         placeName: ''
       },
+      completed: false
     }
   }
   
@@ -261,6 +280,7 @@ export class AppComponent implements OnInit, AfterViewInit{
       this.runningStats.totalDistanceRan = Number(this.runningStats.totalDistanceRan.toFixed(2))
       this.runningStats.numberOfRuns++
       localStorage.setItem('userRunningStats', JSON.stringify(this.runningStats));
+
       // Closes Log a Run component and resets distanceRan
       this.addingRun = !this.addingRun;
       this.distanceRan = 1;
@@ -310,8 +330,9 @@ export interface ICoordinates {
 
 export interface IGoal {
   placeName: string,
-  progress:  number | string,
+  progress:  number,
   coords:    ICoordinates,
+  completed: boolean,
   // Measured in Km
   distance?: number
 }
