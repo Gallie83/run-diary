@@ -279,7 +279,20 @@
                   </ng-container>
                 </div>
                 
-                <mat-tab label="Completed Goals"> Completed Goals go here </mat-tab>
+                <mat-tab label="Completed Goals"> 
+                  <div class="goal-div" *ngFor="let goal of user.goals">
+                    <ng-container *ngIf="goal.completed == true">
+                      <mat-card appearance="outlined">
+                        <mat-card-content>
+                          <div>Destination: {{goal.placeName}}</div>
+                          <div class="goal-info">
+                            <div>Distance Ran: {{getDisplayDistance(goal.distance)}}</div>
+                          </div>
+                        </mat-card-content>
+                      </mat-card>
+                    </ng-container>
+                  </div>  
+                </mat-tab>
                 
               </div>
               

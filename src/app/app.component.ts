@@ -174,10 +174,10 @@ export class AppComponent implements OnInit, AfterViewInit{
     return Math.min(progress, 100);
   }
 
+  // When user clicks that the goal is completed, it saves item to localStorage
   public setGoalCompleted(goal: IGoal): void {
-    this.currentGoal = goal;
-    this.currentGoal.completed = true;
-    console.log(this.currentGoal.completed)
+    goal.completed = true;
+    localStorage.setItem('userData', JSON.stringify(this.user))
   }
 
   // Makes a Get request from Geocode API
