@@ -9,7 +9,7 @@ import { MatCardModule } from '@angular/material/card';
     MatCardModule
   ],
   template: `
-    <mat-card class="content">
+    <mat-card>
   <mat-card-title>{{ addressDetails?.display_name ? addressDetails?.display_name : "Title" }}</mat-card-title>
   <mat-card-content>
     <div>Lat:{{ addressDetails?.lat ? addressDetails?.lat: "0" }}</div> 

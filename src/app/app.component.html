@@ -238,6 +238,104 @@
     cursor: pointer;
   }
 
+/* Initial form screen stylings */
+
+  .opening-form-card {
+    width: 100%;
+    margin: 0 auto; /* Centers the card */
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f5f5f5; /* Light background color */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .opening-form-card mat-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.opening-form-card div {
+  font-size: 16px;
+  color: #333; /* Dark text for readability */
+}
+
+.opening-form-card input {
+  padding: 10px;
+  border: 1px solid #ccc; /* Light border */
+  border-radius: 5px;
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box; /* Ensure padding doesn't increase element size */
+}
+
+.opening-form-card button {
+  padding: 10px 15px;
+  background-color: #3f51b5; /* Mat-button primary color */
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.opening-form-card button:hover {
+  background-color: #303f9f; /* Darker shade on hover */
+}
+
+.opening-form-card button[disabled] {
+  background-color: #ccc; /* Gray out disabled button */
+  cursor: not-allowed;
+}
+
+.example-button-container {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.no-results-found {
+  color: red; /* Red color for error message */
+  font-size: 14px;
+}
+
+.app-address-card {
+  margin-top: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.app-address-card:hover {
+  background-color: #e0e0e0; /* Light hover effect */
+}
+
+.scroll-container {
+  max-height: 400px; /* Set the maximum height of the scrollable area */
+  overflow-y: auto;  /* Enable vertical scrolling when content overflows */
+  padding: 10px;
+  border: 1px solid #ccc; /* Optional: Add a border for a window-like look */
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Optional: Add some shadow for depth */
+}
+
+.scrollable-card {
+  margin-bottom: 10px; /* Add spacing between the cards */
+}
+
+.scroll-container::-webkit-scrollbar {
+  width: 8px; /* Adjust the width of the vertical scrollbar */
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+
+
+
 
 </style>
 
@@ -296,7 +394,7 @@
                 
               </div>
               
-              <div *ngIf="user.goals.length === 0">No Goals added</div>
+              <div class="no-goals" *ngIf="user.goals.length === 0">No Goals added</div>
 
               </mat-tab>
           </mat-tab-group>
@@ -359,56 +457,53 @@
           />
           <mat-icon (click)="convertDistance()">swap_horizontal_circle</mat-icon>
           <button (click)="logRun(distanceRan)">Log in {{ this.kilometers ? 'Kilometers' : 'Miles'}}</button>
-        </div> 
+        </div>
+    </div>
+  </div>
+
+  <div class="content" *ngIf="newUser">
+    <mat-card class="opening-form-card" appearance="outlined">
+      <mat-card-content>
         
         <!-- <mat-form-field>
-        <mat-label>Enter a date range</mat-label>
-        <mat-date-range-input [rangePicker]="picker">
-          <input matStartDate placeholder="Start date">
-          <input matEndDate placeholder="End date">
-        </mat-date-range-input>
-        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-date-range-picker #picker></mat-date-range-picker>
-      </mat-form-field> -->
-      
-    </div>
+          <mat-label>User Name</mat-label> -->
+          <div>Username</div>
+          <input
+          (change)="setUsername()"
+          placeholder="some guy"
+          [(ngModel)]=username
+          required
+          />
+        <!-- </mat-form-field> -->
+        <!-- <mat-form-field>
+          <mat-label>User Name</mat-label> -->
+          <div>Starting Location</div>
+          <input
+          placeholder="Search for your home address"
+          [(ngModel)]=locationSearch
+          required
+          />
+        <!-- </mat-form-field> -->
+        <button (click)="generateLocationList()">enter location</button>
+        
+        <!-- If no results for locationSearch -->
+        <div *ngIf="this.noResultsFound">No Results found please try again</div>
+
+        <!-- Displays locationSearch results -->
+         <div class="scroll-container">
+             <app-address-card 
+             *ngFor="let item of apiResponse"
+             class="scrollable-card"
+             [addressDetails]="item"
+             (click)="setLocation(item)">
+            </app-address-card>
+          </div>
+
+      <button class="example-button-container" (click)="saveForm()" [disabled]="saveDisabled">Save Form</button>
+
+      </mat-card-content>
+    </mat-card>
   </div>
-  <div class="content" *ngIf="newUser">
-    <!-- <mat-form-field>
-      <mat-label>User Name</mat-label> -->
-      <div>Username</div>
-      <input
-      (change)="setUsername()"
-      placeholder="some guy"
-      [(ngModel)]=username
-      required
-      />
-    <!-- </mat-form-field> -->
-  </div>
-  <div class="content" *ngIf="newUser">
-    <!-- <mat-form-field>
-      <mat-label>User Name</mat-label> -->
-      <div>Starting Location</div>
-      <input
-      placeholder="Search for your home address"
-      [(ngModel)]=locationSearch
-      required
-      />
-    <!-- </mat-form-field> -->
-    <button (click)="generateLocationList()">enter location</button>
-  </div>
-  <div class="location-cards" *ngIf="newUser">
-    <!-- If no results for locationSearch -->
-    <div *ngIf="this.noResultsFound">No Results found please try again</div>
-      <!-- Displays locationSearch results -->
-      <div *ngFor="let item of apiResponse">
-        <app-address-card 
-        [addressDetails]="item"
-          (click)="setLocation(item)">
-        </app-address-card>
-      </div>
-    </div>
-  <button *ngIf="newUser" class="example-button-container" (click)="saveForm()" [disabled]="saveDisabled">Save Form</button>
 </main>
 
 
