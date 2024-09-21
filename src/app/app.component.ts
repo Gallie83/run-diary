@@ -9,7 +9,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatDatepickerModule, MatStartDate} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
-import { NgFor, NgIf } from '@angular/common';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import { environment } from '../environments/environment.development';
 import {HttpClientModule, HttpClient} from '@angular/common/http';
@@ -24,6 +24,7 @@ import NodeGeolocation from 'nodejs-geolocation';
   standalone: true,
   imports: [
     HttpClientModule,
+    CommonModule,
     FormsModule,
     NgIf,
     NgFor,
@@ -87,7 +88,9 @@ export class AppComponent implements OnInit, AfterViewInit{
 
   public locationSearch: string = '';
   public noResultsFound: boolean = false;
-
+  public locationDiv: boolean = false;
+  public selectedAddress: any = null;
+  
   public addingGoal: boolean = false;
   public addingRun: boolean = false;
 
@@ -189,6 +192,7 @@ export class AppComponent implements OnInit, AfterViewInit{
   // Returns list of location based on user input
   public generateLocationList(): void {
     this.noResultsFound = false;
+    this.locationDiv = true;
     this.convertAddress(this.locationSearch);
   }
 
@@ -300,6 +304,7 @@ export class AppComponent implements OnInit, AfterViewInit{
       console.log("Oops somethings gone wrong ... aborting")
       return
     }
+    this.selectedAddress = item;
     this.user.startingLocation.long = item.lon;
     this.user.startingLocation.lat = item.lat;
     this.user.startingLocation.placeName = item.display_name;
