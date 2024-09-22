@@ -140,17 +140,18 @@ export class AppComponent implements OnInit, AfterViewInit{
     if(this.user.goals.length === 0) {
       return
     }
+    console.log( this.currentGoal.progress + 'current')
     const geo = new NodeGeolocation('MyApp');
     this.user.goals.forEach( (goal: IGoal) => {
       // Calculate user progress for each goal
       goal.progress = this.getUserGoalProgress(goal.distance, this.runningStats.totalDistanceRan);
+    console.log( this.currentGoal.progress + 'current')
       if(goal.distance) {
         return
       }
       const startingPosition = {lat:this.user.startingLocation.lat, lon:this.user.startingLocation.long}
       const endPosition = {lat:goal.coords.lat, lon:goal.coords.long}
       const calculatedDistance = geo.calculateDistance(startingPosition,endPosition)
-      console.log('hello')
         // Converts distanceToGoal to a number before saving
         if (typeof calculatedDistance === 'string') {
           const parsedDistance = parseFloat(calculatedDistance);
@@ -238,7 +239,7 @@ export class AppComponent implements OnInit, AfterViewInit{
     // Sets item as currentGoal and adds to user.goals array
     this._setCurrentGoal(item);
     this.user.goals.push(this.currentGoal);
-    
+
     this.addingGoal = false;
     // Resets currentGoal and saves user.goals array to localStorage
     this._resetCurrentGoal();

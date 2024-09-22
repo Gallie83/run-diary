@@ -187,8 +187,6 @@
   .location-cards {
     max-height: 800px;
     overflow-x: auto;
-    /* justify-content: center; */
-    /* display: flex; */
   }
 
   app-address-card {
@@ -236,6 +234,10 @@
     font-weight: bold;
     color:white; 
     cursor: pointer;
+  }
+
+  .no-goals {
+    text-align: center;
   }
 
 /* Initial form screen stylings */
@@ -307,7 +309,6 @@
     color: red; 
     font-size: 14px;
   }
-
   
   .scroll-container {
     max-height: 400px; 
@@ -386,7 +387,7 @@
                         <div>Goal: {{goal.placeName}}</div>
                         <div class="goal-info">
                           <div>Distance: {{getDisplayDistance(goal.distance)}}</div>
-                          <div class="align-right">{{goal.progress}}%</div>
+                          <div class="align-right">{{goal.progress ? goal.progress : 0 }}%</div>
                         </div>
                         <mat-progress-bar mode="determinate" value="{{ goal.progress }}"></mat-progress-bar>
                       </mat-card-content>
@@ -414,7 +415,7 @@
               
               <div class="no-goals" *ngIf="user.goals.length === 0">No Goals added</div>
 
-              </mat-tab>
+            </mat-tab>
           </mat-tab-group>
 
           <div>Runs total: {{ this.runningStats.numberOfRuns }}</div>
