@@ -95,7 +95,6 @@ export class AppComponent implements OnInit, AfterViewInit{
   public addingRun: boolean = false;
 
   public apiResponse: any = [];
-  public distanceToGoal: number = 0;
   public kilometers: boolean = true;
 
   public distanceRan: number = 1;
@@ -145,14 +144,14 @@ export class AppComponent implements OnInit, AfterViewInit{
     this.user.goals.forEach( (goal: IGoal) => {
       // Calculate user progress for each goal
       goal.progress = this.getUserGoalProgress(goal.distance, this.runningStats.totalDistanceRan);
-    console.log( this.currentGoal.progress + 'current')
+      console.log( this.currentGoal.progress + 'current')
       if(goal.distance) {
         return
       }
       const startingPosition = {lat:this.user.startingLocation.lat, lon:this.user.startingLocation.long}
       const endPosition = {lat:goal.coords.lat, lon:goal.coords.long}
       const calculatedDistance = geo.calculateDistance(startingPosition,endPosition)
-        // Converts distanceToGoal to a number before saving
+        // Converts distance to a number before saving
         if (typeof calculatedDistance === 'string') {
           const parsedDistance = parseFloat(calculatedDistance);
           if (!isNaN(parsedDistance)) {
@@ -163,6 +162,9 @@ export class AppComponent implements OnInit, AfterViewInit{
         } else {
           goal.distance = calculatedDistance;
         }
+        // Calculates goal progress again to ensure it doesnt show as completed when new goal is added
+        goal.progress = this.getUserGoalProgress(goal.distance, this.runningStats.totalDistanceRan);
+        console.log( this.currentGoal.progress + ' again')
       }
     )
     console.log(this.user.goals)
@@ -174,6 +176,7 @@ export class AppComponent implements OnInit, AfterViewInit{
     if(goalDistance === undefined) {
       goalDistance = 0;
     }
+    console.log(goalDistance, totalDistance + 'seconds')
     const progress = Number(((totalDistance/goalDistance)*100).toFixed(2))
     return Math.min(progress, 100);
   }
