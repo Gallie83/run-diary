@@ -12,7 +12,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { CommonModule, NgFor, NgIf } from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import { environment } from '../environments/environment.development';
-import {HttpClientModule, HttpClient} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 
 import { Injectable } from  '@angular/core';
 import { AddressCardComponent, IAddressDetails } from './addressCard.component';
@@ -23,7 +23,6 @@ import NodeGeolocation from 'nodejs-geolocation';
   selector: 'app-root',
   standalone: true,
   imports: [
-    HttpClientModule,
     CommonModule,
     FormsModule,
     NgIf,
@@ -273,6 +272,19 @@ export class AppComponent implements OnInit, AfterViewInit{
       completed: false
     }
   }
+
+  public deleteGoal(goal: any): void {
+    const goalIndex = this.user.goals.indexOf(goal);
+    console.log(goalIndex);
+
+    if(goalIndex >= 0) {
+      this.user.goals.splice(goalIndex, 1);
+      console.log('Goal deleted')
+    } else {
+      console.log('Error removing goal')
+    }
+
+  }
   
   public logRun(item: number): void {
     if (this.distanceRan > 0) {
@@ -288,6 +300,9 @@ export class AppComponent implements OnInit, AfterViewInit{
       this.runningStats.totalDistanceRan = Number(this.runningStats.totalDistanceRan.toFixed(2))
       this.runningStats.numberOfRuns++
       localStorage.setItem('userRunningStats', JSON.stringify(this.runningStats));
+
+      // Ensures goal progress updates
+      this.hydrateUserGoals();
 
       // Closes Log a Run component and resets distanceRan
       this.addingRun = !this.addingRun;
