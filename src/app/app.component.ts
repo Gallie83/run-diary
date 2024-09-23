@@ -6,7 +6,6 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import {MatDatepickerModule, MatStartDate} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
 import { CommonModule, NgFor, NgIf } from '@angular/common';
@@ -18,6 +17,8 @@ import { Injectable } from  '@angular/core';
 import { AddressCardComponent, IAddressDetails } from './addressCard.component';
 
 import NodeGeolocation from 'nodejs-geolocation';
+import { DeleteConfirmComponent } from './deleteConfirm.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-root',
@@ -34,14 +35,12 @@ import NodeGeolocation from 'nodejs-geolocation';
     MatProgressBarModule,
     MatButtonModule,
     MatIconModule,
-    MatDatepickerModule,
     MatFormFieldModule,
     MatNativeDateModule,
     AddressCardComponent
   ],
   providers: [  
     MatSlideToggleModule,
-    MatDatepickerModule,
     MatNativeDateModule  
   ],
   templateUrl: './app.component.html',
@@ -53,7 +52,7 @@ import NodeGeolocation from 'nodejs-geolocation';
   providedIn:  'root'
 })
 export class AppComponent implements OnInit, AfterViewInit{
-  constructor(private https: HttpClient) { }
+  constructor(private https: HttpClient, public dialog: MatDialog) { }
   
   title = 'run-diary';
 
@@ -274,15 +273,20 @@ export class AppComponent implements OnInit, AfterViewInit{
   }
 
   public deleteGoal(goal: any): void {
-    const goalIndex = this.user.goals.indexOf(goal);
-    console.log(goalIndex);
-
-    if(goalIndex >= 0) {
-      this.user.goals.splice(goalIndex, 1);
-      console.log('Goal deleted')
-    } else {
-      console.log('Error removing goal')
-    }
+    const dialogRef = this.dialog.open(DeleteConfirmComponent);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const goalIndex = this.user.goals.indexOf(goal);
+        console.log(goalIndex);
+    
+        if(goalIndex >= 0) {
+          this.user.goals.splice(goalIndex, 1);
+          console.log('Goal deleted')
+        } else {
+          console.log('Error removing goal')
+        }
+      }
+    })
 
   }
   
