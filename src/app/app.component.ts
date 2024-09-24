@@ -17,7 +17,7 @@ import { Injectable } from  '@angular/core';
 import { AddressCardComponent, IAddressDetails } from './addressCard.component';
 
 import NodeGeolocation from 'nodejs-geolocation';
-import { DeleteConfirmComponent } from './deleteConfirm.component';
+import { DeleteConfirmComponent } from './deleteConfirm/deleteConfirm.component';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({

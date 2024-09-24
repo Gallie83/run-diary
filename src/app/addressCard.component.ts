@@ -3,7 +3,6 @@ import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector:    'app-address-card',
-  // templateUrl: './addressCard.component.html',
   standalone:  true,
   imports: [    
     MatCardModule
