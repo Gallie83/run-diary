@@ -13,7 +13,7 @@ import { MatDialogRef } from '@angular/material/dialog';
         </div>
     </div>
 `,
-styleUrls: ['deleteConfirm.component.css']
+styleUrls: ['deleteConfirm.component.less']
 })
 export class DeleteConfirmComponent {
   constructor(public dialogRef: MatDialogRef<DeleteConfirmComponent>) {}

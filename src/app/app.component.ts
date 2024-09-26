@@ -18,6 +18,7 @@ import { AddressCardComponent, IAddressDetails } from './addressCard.component';
 
 import NodeGeolocation from 'nodejs-geolocation';
 import { DeleteConfirmComponent } from './deleteConfirm/deleteConfirm.component';
+import { ChangeUsernameComponent } from './changeUsername/changeUsername.component';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
@@ -133,11 +134,22 @@ export class AppComponent implements OnInit, AfterViewInit{
     
   }
 
+  // Updates Username
+  public changeUsername(): void {
+    const dialogRef = this.dialog.open(ChangeUsernameComponent);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.user.username = result;
+        this._updateUserData();
+      }
+    })
+  }
+
+  // Calculates distance from start point to goal and users progress
   public hydrateUserGoals(): void {
     if(this.user.goals.length === 0) {
       return
     }
-    console.log( this.currentGoal.progress + 'current')
     const geo = new NodeGeolocation('MyApp');
     this.user.goals.forEach( (goal: IGoal) => {
       // Calculate user progress for each goal
@@ -162,10 +174,8 @@ export class AppComponent implements OnInit, AfterViewInit{
         }
         // Calculates goal progress again to ensure it doesnt show as completed when new goal is added
         goal.progress = this.getUserGoalProgress(goal.distance, this.runningStats.totalDistanceRan);
-        console.log( this.currentGoal.progress + ' again')
       }
     )
-    console.log(this.user.goals)
   }
 
   // Returns percentage of progress user has made to a goal 
