@@ -2,6 +2,7 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialog } from '@angular/material/dialog';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatButtonModule} from '@angular/material/button';
@@ -19,7 +20,7 @@ import { AddressCardComponent, IAddressDetails } from './addressCard.component';
 import NodeGeolocation from 'nodejs-geolocation';
 import { DeleteConfirmComponent } from './deleteConfirm/deleteConfirm.component';
 import { ChangeUsernameComponent } from './changeUsername/changeUsername.component';
-import { MatDialog } from '@angular/material/dialog';
+import { ChangeLocationComponent } from './changeLocation/changeLocation.component';
 
 @Component({
   selector: 'app-root',
@@ -143,6 +144,17 @@ export class AppComponent implements OnInit, AfterViewInit{
         this._updateUserData();
       }
     })
+  }
+
+  // Updates Starting Location
+  public changeLocation(): void {
+    const dialogRef = this.dialog.open(ChangeLocationComponent);
+    // dialogRef.afterClosed().subscribe(result => {
+    //   if (result) {
+    //     this.user.username = result;
+    //     this._updateUserData();
+    //   }
+    // })
   }
 
   // Calculates distance from start point to goal and users progress

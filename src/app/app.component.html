@@ -22,8 +22,9 @@
           <div>Name: {{ this.user.username}}</div>
           <button mat-button (click)="changeUsername()">Change Username</button>
           <div>Home location: {{ this.user.startingLocation.placeName}}</div>
-          <!-- Goal cards -->
+          <button mat-button (click)="changeLocation()">Change Home location</button>
 
+          <!-- Goal cards -->
           <mat-tab-group animationDuration="2000ms" class="goals-tabs">
 
             <mat-tab label="Active Goals"> 
