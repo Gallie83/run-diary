@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
   <div>
       <h2 mat-dialog-title>Change Username</h2>
       <input matInput
+              maxlength="20"
               placeholder="New Username"
               [(ngModel)]="newUsername"
             />

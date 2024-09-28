@@ -16,19 +16,33 @@
     <div>
       <mat-card appearance="outlined">
         <mat-card-content>
-          <mat-slide-toggle (click)="convertDistance()">
-            {{ this.kilometers ? 'Km' : 'Mi'}}
-          </mat-slide-toggle>
-          <div>Name: {{ this.user.username}}</div>
-          <button mat-button (click)="changeUsername()">Change Username</button>
-          <div>Home location: {{ this.user.startingLocation.placeName}}</div>
-          <button mat-button (click)="changeLocation()">Change Home location</button>
+          <div class="container">
+            
+            <div class="left-align">
+              <div class="user-info-component component">
+              <mat-slide-toggle (click)="convertDistance()">
+                {{ this.kilometers ? 'Km' : 'Mi'}}
+              </mat-slide-toggle>
+              <div>Name: {{ this.user.username}}</div>
+              <button mat-button (click)="changeUsername()">Change Username</button>
+              <div>Home location: {{ this.user.startingLocation.placeName}}</div>
+              <button mat-button (click)="changeLocation()">Change Home location</button>
+            </div>
+            
+              <div class="running-stats-component component">
+              <div>Runs total: {{ this.runningStats.numberOfRuns }}</div>
+              <div>
+                Total Distance: {{ getDisplayDistance(this.runningStats.totalDistanceRan) }}
+              </div>
+            </div>
+            
+          </div>
 
           <!-- Goal cards -->
-          <mat-tab-group animationDuration="2000ms" class="goals-tabs">
-
+          <mat-tab-group class="goals-component component" animationDuration="2000ms" class="goals-tabs">
+            
             <mat-tab label="Active Goals"> 
-
+              
               <div *ngIf="user.goals.length">
                 
                 <div class="goal-div" *ngFor="let goal of user.goals">
@@ -74,14 +88,11 @@
               </div>
               
               <div class="no-goals" *ngIf="user.goals.length === 0">No Goals added</div>
-
+              
             </mat-tab>
           </mat-tab-group>
-
-          <div>Runs total: {{ this.runningStats.numberOfRuns }}</div>
-          <div>
-            Total Distance: {{ getDisplayDistance(this.runningStats.totalDistanceRan) }}
-          </div>
+    
+        </div>
         </mat-card-content>
       </mat-card>
 

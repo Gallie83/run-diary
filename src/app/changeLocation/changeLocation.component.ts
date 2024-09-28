@@ -12,9 +12,9 @@ import { FormsModule } from '@angular/forms';
       <div>*This will change your progress towards any active goals*</div>
       <input matInput
               placeholder="Search for new location"
-              [(ngModel)]="newUsername"
-            />
-        <!-- <div>
+              />
+              <!-- <div>
+          [(ngModel)]="locationSearch"
           <button mat-button (click)="onNoClick()">Cancel</button>
           <button mat-button color="warn" (click)="onYesClick()">Confirm</button>
         </div> -->
@@ -25,7 +25,7 @@ styleUrls: ['changeLocation.component.less']
 
 
 export class ChangeLocationComponent {
-  public newUsername:string = '';
+  public locationSearch:string = '';
 
   constructor(public dialogRef: MatDialogRef<ChangeLocationComponent>) {}
 
@@ -34,6 +34,6 @@ export class ChangeLocationComponent {
   }
 
   onYesClick(): void {
-    this.dialogRef.close(this.newUsername);
+    this.dialogRef.close();
   }
 }
