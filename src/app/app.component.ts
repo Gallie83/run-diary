@@ -19,7 +19,6 @@ import { AddressCardComponent, IAddressDetails } from './addressCard.component';
 
 import NodeGeolocation from 'nodejs-geolocation';
 import { DeleteConfirmComponent } from './deleteConfirm/deleteConfirm.component';
-import { ChangeUsernameComponent } from './changeUsername/changeUsername.component';
 import { ChangeLocationComponent } from './changeLocation/changeLocation.component';
 
 @Component({
@@ -90,6 +89,9 @@ export class AppComponent implements OnInit, AfterViewInit{
   public noResultsFound: boolean = false;
   public locationDiv: boolean = false;
   public selectedAddress: any = null;
+
+  public changingUsername:boolean = false;
+  public newUsername: string = '';
   
   public addingGoal: boolean = false;
   public addingRun: boolean = false;
@@ -137,13 +139,12 @@ export class AppComponent implements OnInit, AfterViewInit{
 
   // Updates Username
   public changeUsername(): void {
-    const dialogRef = this.dialog.open(ChangeUsernameComponent);
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.user.username = result;
-        this._updateUserData();
-      }
-    })
+    if(this.newUsername.length > 0) {
+      this.user.username = this.newUsername;
+      this.changingUsername = false;
+      this.newUsername = '';
+      this._updateUserData();
+    }
   }
 
   // Updates Starting Location

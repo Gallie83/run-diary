@@ -21,8 +21,21 @@
 
               <mat-tab-group class="user-info-component component">
                 <mat-tab label="User Info">
-                  <div>Name: {{ this.user.username}}</div>
-                  <button mat-button (click)="changeUsername()">Change Username</button>
+                  <div (click)="changingUsername = !changingUsername">Name: {{ this.user.username}}</div>
+                  
+                  <div *ngIf="changingUsername">
+                    <input matInput
+                      maxlength="20"
+                      minlength="1"
+                      placeholder="New Username"
+                      [(ngModel)]="newUsername"
+                    />
+                    <div>
+                      <button mat-button color="warn" (click)="changingUsername = !changingUsername">Cancel</button>
+                      <button mat-button (click)="changeUsername()">Confirm</button>
+                    </div>
+                  </div>
+
                   <div>Home location: {{ this.user.startingLocation.placeName}}</div>
                   <button mat-button (click)="changeLocation()">Change Home location</button>
                   <div>
