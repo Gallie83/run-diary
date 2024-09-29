@@ -6,17 +6,17 @@
     align-items: center;
     // padding: 1rem;
     box-sizing: inherit;
-    position: relative;
+    // position: relative;
     background-color: lightgrey;
    }
 
   // Main content styling
   .content {
-    display: block;
-    // justify-content: space-around;
+    display: flex;
+    justify-content: center;
     width: 100%;
-    max-width: 700px;
-    margin-bottom: 3rem;
+    // margin-top: 10rem;
+    // padding: 5rem;
   }
 
   .content h1 {
@@ -26,12 +26,6 @@
   .content p {
     margin-top: 1.5rem;
   }
-
-//   .divider {
-//     width: 1px;
-//     background: var(--red-to-pink-to-purple-vertical-gradient);
-//     margin-inline: 0.5rem;
-//   }
 
   // @media screen and (max-width: 650px) {
   //   .content {
@@ -60,11 +54,8 @@
     display: flex; 
     flex-direction: column;
     justify-content: space-between;
-    // height: 100%;
-    border: 1px solid black;
     gap: .5rem;
-    padding: .5rem;
-    // margin: auto;
+
   }
   
   .component {
@@ -73,17 +64,17 @@
     border-radius: 5px;
     // padding: 1rem;
   }
-
+  
   .user-info-component, .running-stats-component {
     height: 100%;
     width: 100%;
-    // margin: 1rem;
-    border: 1px solid black;
     background-color: #f5f5f5;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   }
 
   .goals-component {
     flex-grow: 1;
+    margin: 0;
   }
 
 
@@ -104,7 +95,6 @@
 
   .goals-tabs {
     border: 1px solid rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
     background-color: #f5f5f5; 
     border-radius: 8px; 
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);

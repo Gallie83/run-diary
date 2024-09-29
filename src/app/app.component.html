@@ -12,29 +12,79 @@
 
 <main class="main">
   <div class="content" *ngIf="!newUser">
-    <!-- <div class="divider" role="separator" aria-label="Divider"></div> -->
     <div>
       <mat-card appearance="outlined">
         <mat-card-content>
           <div class="container">
             
             <div class="left-align">
-              <div class="user-info-component component">
-              <mat-slide-toggle (click)="convertDistance()">
-                {{ this.kilometers ? 'Km' : 'Mi'}}
-              </mat-slide-toggle>
-              <div>Name: {{ this.user.username}}</div>
-              <button mat-button (click)="changeUsername()">Change Username</button>
-              <div>Home location: {{ this.user.startingLocation.placeName}}</div>
-              <button mat-button (click)="changeLocation()">Change Home location</button>
-            </div>
+
+              <mat-tab-group class="user-info-component component">
+                <mat-tab label="User Info">
+                  <div>Name: {{ this.user.username}}</div>
+                  <button mat-button (click)="changeUsername()">Change Username</button>
+                  <div>Home location: {{ this.user.startingLocation.placeName}}</div>
+                  <button mat-button (click)="changeLocation()">Change Home location</button>
+                  <div>
+                    <mat-slide-toggle (click)="convertDistance()">
+                      {{ this.kilometers ? 'Km' : 'Mi'}}
+                    </mat-slide-toggle>
+                  </div>
+                </mat-tab>
+              </mat-tab-group>
             
-              <div class="running-stats-component component">
-              <div>Runs total: {{ this.runningStats.numberOfRuns }}</div>
-              <div>
-                Total Distance: {{ getDisplayDistance(this.runningStats.totalDistanceRan) }}
-              </div>
-            </div>
+              <mat-tab-group class="running-stats-component component">
+
+                <mat-tab label="Run Stats">
+                  <div>Runs total: {{ this.runningStats.numberOfRuns }}</div>
+                  <div>
+                    Total Distance: {{ getDisplayDistance(this.runningStats.totalDistanceRan) }}
+                  </div>
+                </mat-tab>
+
+                <mat-tab label="Add a Goal">
+                  <div class="content">
+                    <div class="content">
+                      <div>Next Goal Location</div>
+                      <input
+                      placeholder="Search for your first goal address"
+                      [(ngModel)]=locationSearch
+                      required
+                      />
+                      <button (click)="generateLocationList()">enter location</button>
+                    </div>
+                    <div class="location-cards">
+                      <!-- If no results for locationSearch -->
+                      <div *ngIf="this.noResultsFound">No Results found please try again</div>
+                        <!-- Displays locationSearch results -->
+                        <div *ngFor="let item of apiResponse">
+                          <app-address-card 
+                          [addressDetails]="item"
+                          (click)="setGoal(item)">
+                        </app-address-card>
+                      </div>
+                    </div>
+                  </div> 
+                </mat-tab>
+
+                <mat-tab label="Log a Run">
+                  <div class="content">
+                    <div>How far did you run?</div>
+                    <input
+                      type="number"
+                      min="0.5"
+                      value="{{this.distanceRan}}"
+                      placeholder="Run Distance"
+                      required
+                      [(ngModel)]="distanceRan"
+                    />
+                    <mat-icon (click)="convertDistance()">swap_horizontal_circle</mat-icon>
+                    <button (click)="logRun(distanceRan)">Log in {{ this.kilometers ? 'Kilometers' : 'Miles'}}</button>
+                  </div>
+                </mat-tab>
+
+
+              </mat-tab-group>
             
           </div>
 
@@ -95,59 +145,6 @@
         </div>
         </mat-card-content>
       </mat-card>
-
-      <div class="button-container" (click)="this.addingGoal = !this.addingGoal;">
-        <a mat-fab extended routerLink=".">
-          <mat-icon>place</mat-icon>
-          Add a Goal
-        </a>
-      </div>
-
-      <!-- Div appears when user selecting a goal -->
-      <div class="content" *ngIf="this.addingGoal">
-        <div class="content">
-          <div>Next Goal Location</div>
-          <input
-          placeholder="Search for your first goal address"
-          [(ngModel)]=locationSearch
-          required
-          />
-          <button (click)="generateLocationList()">enter location</button>
-        </div>
-        <div class="location-cards">
-          <!-- If no results for locationSearch -->
-          <div *ngIf="this.noResultsFound">No Results found please try again</div>
-            <!-- Displays locationSearch results -->
-            <div *ngFor="let item of apiResponse">
-              <app-address-card 
-              [addressDetails]="item"
-              (click)="setGoal(item)">
-            </app-address-card>
-          </div>
-        </div>
-      </div>  
-      
-      <div class="button-container" (click)="this.addingRun = !this.addingRun;">
-        <a mat-fab extended routerLink=".">
-          <mat-icon>directions_run</mat-icon>
-          Log a Run
-        </a>
-      </div>
-
-      <!-- Div appears when logging a run -->
-      <div class="content" *ngIf="this.addingRun">
-        <div>How far did you run?</div>
-        <input
-          type="number"
-          min="0.5"
-          value="{{this.distanceRan}}"
-          placeholder="Run Distance"
-          required
-          [(ngModel)]="distanceRan"
-        />
-        <mat-icon (click)="convertDistance()">swap_horizontal_circle</mat-icon>
-        <button (click)="logRun(distanceRan)">Log in {{ this.kilometers ? 'Kilometers' : 'Miles'}}</button>
-      </div>
     </div>
   </div>
 
