@@ -14,14 +14,14 @@
   <div class="content" *ngIf="!newUser">
     <div>
       <mat-card appearance="outlined">
-        <mat-card-content>
+        <mat-card>
           <div class="container">
             
             <div class="left-align">
 
               <mat-tab-group class="user-info-component component">
                 <mat-tab label="User Info">
-                  <div (click)="changingUsername = !changingUsername">Name: {{ this.user.username}}</div>
+                  <div class="hover" (click)="changingUsername = !changingUsername">Name: {{ this.user.username}}</div>
                   
                   <div *ngIf="changingUsername">
                     <input matInput
@@ -36,28 +36,24 @@
                     </div>
                   </div>
 
-                  <div>Home location: {{ this.user.startingLocation.placeName}}</div>
-                  <button mat-button (click)="changeLocation()">Change Home location</button>
+                  <div>Home location: {{ this.formattedStartingLocation}}</div>
                   <div>
                     <mat-slide-toggle (click)="convertDistance()">
                       {{ this.kilometers ? 'Km' : 'Mi'}}
                     </mat-slide-toggle>
+                  </div>
+                  <div>Runs total: {{ this.runningStats.numberOfRuns }}</div>
+                  <div>
+                    Total Distance: {{ getDisplayDistance(this.runningStats.totalDistanceRan) }}
                   </div>
                 </mat-tab>
               </mat-tab-group>
             
               <mat-tab-group class="running-stats-component component">
 
-                <mat-tab label="Run Stats">
-                  <div>Runs total: {{ this.runningStats.numberOfRuns }}</div>
-                  <div>
-                    Total Distance: {{ getDisplayDistance(this.runningStats.totalDistanceRan) }}
-                  </div>
-                </mat-tab>
-
                 <mat-tab label="Add a Goal">
-                  <div class="content">
-                    <div class="content">
+
+                  <div class="add-goal-container">
                       <div>Next Goal Location</div>
                       <input
                       placeholder="Search for your first goal address"
@@ -65,7 +61,6 @@
                       required
                       />
                       <button (click)="generateLocationList()">enter location</button>
-                    </div>
                     <div class="location-cards">
                       <!-- If no results for locationSearch -->
                       <div *ngIf="this.noResultsFound">No Results found please try again</div>
@@ -78,6 +73,7 @@
                       </div>
                     </div>
                   </div> 
+
                 </mat-tab>
 
                 <mat-tab label="Log a Run">
@@ -125,7 +121,7 @@
                           <div class="align-right">{{goal.progress ? goal.progress : 0 }}%</div>
                         </div>
                         <!-- Progress bar -->
-                        <mat-progress-bar mode="determinate" value="{{ goal.progress }}"></mat-progress-bar>
+                        <mat-progress-bar *ngIf="goal.progress !== 100" mode="determinate" value="{{ goal.progress }}"></mat-progress-bar>
                       </mat-card-content>
                     </mat-card>
                     <!-- Appears if goal is completed -->
@@ -156,7 +152,7 @@
           </mat-tab-group>
     
         </div>
-        </mat-card-content>
+        </mat-card>
       </mat-card>
     </div>
   </div>

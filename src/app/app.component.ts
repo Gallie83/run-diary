@@ -19,7 +19,6 @@ import { AddressCardComponent, IAddressDetails } from './addressCard.component';
 
 import NodeGeolocation from 'nodejs-geolocation';
 import { DeleteConfirmComponent } from './deleteConfirm/deleteConfirm.component';
-import { ChangeLocationComponent } from './changeLocation/changeLocation.component';
 
 @Component({
   selector: 'app-root',
@@ -82,6 +81,8 @@ export class AppComponent implements OnInit, AfterViewInit{
     numberOfRuns: 0
   }
 
+  public formattedStartingLocation: string = '';
+
   public newUser: boolean = false;
   public username: string = '';
 
@@ -117,20 +118,23 @@ export class AppComponent implements OnInit, AfterViewInit{
           storage = JSON.parse(storage);
           this.user = storage;
         }
-
+        
         if(userRunningStats) {
           userRunningStats = JSON.parse(userRunningStats);
           this.runningStats = userRunningStats;
         }
-
+        
         this.hydrateUserGoals()
       } catch (error) {
         console.log(error);
       }
-
+      
       if (!storage) {
         this.newUser = true;
       }
+      this.formattedStartingLocation = this.formatPlaceName(this.user.startingLocation.placeName);
+      console.log(this.formattedStartingLocation)
+      console.log(this.user.startingLocation)
   }
 
   ngAfterViewInit(): void {
@@ -147,17 +151,6 @@ export class AppComponent implements OnInit, AfterViewInit{
     }
   }
 
-  // Updates Starting Location
-  public changeLocation(): void {
-    const dialogRef = this.dialog.open(ChangeLocationComponent);
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if (result) {
-    //     this.user.username = result;
-    //     this._updateUserData();
-    //   }
-    // })
-  }
-
   // Calculates distance from start point to goal and users progress
   public hydrateUserGoals(): void {
     if(this.user.goals.length === 0) {
@@ -167,7 +160,7 @@ export class AppComponent implements OnInit, AfterViewInit{
     this.user.goals.forEach( (goal: IGoal) => {
       // Calculate user progress for each goal
       goal.progress = this.getUserGoalProgress(goal.distance, this.runningStats.totalDistanceRan);
-      console.log( this.currentGoal.progress + 'current')
+      console.log( this.currentGoal + 'current')
       if(goal.distance) {
         return
       }
@@ -233,6 +226,7 @@ export class AppComponent implements OnInit, AfterViewInit{
       (response) => {
         console.log(this.apiResponse);
         this.apiResponse = response;
+        console.log(response)
         if(this.apiResponse.length === 0) {
           this.noResultsFound = true;
         }
@@ -241,6 +235,19 @@ export class AppComponent implements OnInit, AfterViewInit{
 
     return valueToReturn
   } 
+
+  // Ensures startingLocation name isn't too long
+  public formatPlaceName(address: string): string {
+    const parts = this.user.startingLocation.placeName.split(',');
+    if(parts.length > 3) {
+      const firstPart = parts[0].trim();
+      const secondPart = parts[1].trim();
+      const lastPart = parts[parts.length-1].trim();
+      return `${firstPart}, ${secondPart} ... ${lastPart}`
+    } else {
+      return this.user.startingLocation.placeName
+    }
+  }
 
   public convertDistance(): void {
     this.kilometers = !this.kilometers;
