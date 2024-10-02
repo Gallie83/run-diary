@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatButtonModule} from '@angular/material/button';
+import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -19,6 +20,7 @@ import { AddressCardComponent, IAddressDetails } from './addressCard.component';
 
 import NodeGeolocation from 'nodejs-geolocation';
 import { DeleteConfirmComponent } from './deleteConfirm/deleteConfirm.component';
+import { ResetConfirmComponent } from './resetConfirm/resetConfirm.component';
 
 @Component({
   selector: 'app-root',
@@ -34,6 +36,7 @@ import { DeleteConfirmComponent } from './deleteConfirm/deleteConfirm.component'
     MatCardModule,
     MatProgressBarModule,
     MatButtonModule,
+    MatMenuModule,
     MatIconModule,
     MatFormFieldModule,
     MatNativeDateModule,
@@ -80,8 +83,6 @@ export class AppComponent implements OnInit, AfterViewInit{
     totalDistanceRan: 0,
     numberOfRuns: 0
   }
-
-  public formattedStartingLocation: string = '';
 
   public newUser: boolean = false;
   public username: string = '';
@@ -132,9 +133,6 @@ export class AppComponent implements OnInit, AfterViewInit{
       if (!storage) {
         this.newUser = true;
       }
-      this.formattedStartingLocation = this.formatPlaceName(this.user.startingLocation.placeName);
-      console.log(this.formattedStartingLocation)
-      console.log(this.user.startingLocation)
   }
 
   ngAfterViewInit(): void {
@@ -149,6 +147,28 @@ export class AppComponent implements OnInit, AfterViewInit{
       this.newUsername = '';
       this._updateUserData();
     }
+  }
+
+  public resetDistance(): void {
+    const dialogRef = this.dialog.open(ResetConfirmComponent);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.runningStats.totalDistanceRan = 0;
+        this.runningStats.numberOfRuns = 0;
+        localStorage.setItem('userRunningStats', JSON.stringify(this.runningStats));
+        this.hydrateUserGoals()
+      }
+    })
+  }
+
+  public deleteAccount(): void {
+    const dialogRef = this.dialog.open(ResetConfirmComponent);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        localStorage.clear();
+        window.location.reload();
+      }
+    })
   }
 
   // Calculates distance from start point to goal and users progress
@@ -211,6 +231,7 @@ export class AppComponent implements OnInit, AfterViewInit{
   public generateLocationList(): void {
     this.noResultsFound = false;
     this.locationDiv = true;
+    this.addingGoal = true;
     this.convertAddress(this.locationSearch);
   }
 
@@ -238,14 +259,14 @@ export class AppComponent implements OnInit, AfterViewInit{
 
   // Ensures startingLocation name isn't too long
   public formatPlaceName(address: string): string {
-    const parts = this.user.startingLocation.placeName.split(',');
+    const parts = address.split(',');
     if(parts.length > 3) {
       const firstPart = parts[0].trim();
       const secondPart = parts[1].trim();
       const lastPart = parts[parts.length-1].trim();
       return `${firstPart}, ${secondPart} ... ${lastPart}`
     } else {
-      return this.user.startingLocation.placeName
+      return address
     }
   }
 
@@ -311,10 +332,7 @@ export class AppComponent implements OnInit, AfterViewInit{
     
         if(goalIndex >= 0) {
           this.user.goals.splice(goalIndex, 1);
-          console.log('Goal deleted')
-        } else {
-          console.log('Error removing goal')
-        }
+        } 
       }
     })
 

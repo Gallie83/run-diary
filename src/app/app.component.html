@@ -15,6 +15,17 @@
     <div>
       <mat-card appearance="outlined">
         <mat-card>
+          <div class="header">
+            <button mat-mini-fab [matMenuTriggerFor]="menu"><mat-icon>menu</mat-icon></button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="convertDistance()"><mat-icon>cached</mat-icon> Km/Mi</button>
+              <button mat-menu-item (click)="resetDistance()">Reset distance ran 
+                <br>
+                <span style="color: gray; font-size: 0.85em;">(Keeps completed goals)</span>
+              </button>
+              <button mat-menu-item style="color: red;" (click)="deleteAccount()">Reset Account</button>
+            </mat-menu>
+          </div>
           <div class="container">
             
             <div class="left-align">
@@ -36,12 +47,7 @@
                     </div>
                   </div>
 
-                  <div>Home location: {{ this.formattedStartingLocation}}</div>
-                  <div>
-                    <mat-slide-toggle (click)="convertDistance()">
-                      {{ this.kilometers ? 'Km' : 'Mi'}}
-                    </mat-slide-toggle>
-                  </div>
+                  <div>Home location: {{ this.formatPlaceName(this.user.startingLocation.placeName) }}</div>
                   <div>Runs total: {{ this.runningStats.numberOfRuns }}</div>
                   <div>
                     Total Distance: {{ getDisplayDistance(this.runningStats.totalDistanceRan) }}
@@ -61,14 +67,16 @@
                       required
                       />
                       <button (click)="generateLocationList()">enter location</button>
-                    <div class="location-cards">
+                    <div *ngIf="addingGoal" class="location-cards">
                       <!-- If no results for locationSearch -->
                       <div *ngIf="this.noResultsFound">No Results found please try again</div>
                         <!-- Displays locationSearch results -->
                         <div *ngFor="let item of apiResponse">
                           <app-address-card 
-                          [addressDetails]="item"
-                          (click)="setGoal(item)">
+                            class="scrollable-card"
+                            [addressDetails]="item"
+                            (click)="setGoal(item)"
+                            [ngClass]="{'highlight': selectedAddress === item}">
                         </app-address-card>
                       </div>
                     </div>
@@ -110,7 +118,7 @@
                       <mat-card-content>
                         <!-- Goal information -->
                         <div class="goal-info">
-                          <div>Goal: {{goal.placeName}}</div>
+                          <div>Goal: {{formatPlaceName(goal.placeName)}}</div>
                           <!-- Delete goal button -->
                           <button mat-icon-button (click)="deleteGoal(goal)" class="delete-button" aria-label="Delete">
                             <mat-icon>delete</mat-icon>
@@ -134,7 +142,7 @@
                     <ng-container *ngIf="goal.completed == true">
                       <mat-card appearance="outlined">
                         <mat-card-content>
-                          <div>Destination: {{goal.placeName}}</div>
+                          <div>Destination: {{formatPlaceName(goal.placeName)}}</div>
                           <div class="goal-info">
                             <div>Distance Ran: {{getDisplayDistance(goal.distance)}}</div>
                           </div>
@@ -192,7 +200,7 @@
           
           <app-address-card 
             *ngFor="let item of apiResponse;"
-            class="scrollable-card"
+            class="scrollable-card hover"
             [addressDetails]="item"
             (click)="setLocation(item)"
             [ngClass]="{'highlight': selectedAddress === item}">
