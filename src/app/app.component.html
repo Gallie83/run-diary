@@ -30,8 +30,7 @@
             
             <div class="left-align">
 
-              <mat-tab-group class="user-info-component component">
-                <mat-tab label="User Info">
+              <div class="user-info-component component">
                   <div class="hover" (click)="changingUsername = !changingUsername">Name: {{ this.user.username}}</div>
                   
                   <div *ngIf="changingUsername">
@@ -52,10 +51,9 @@
                   <div>
                     Total Distance: {{ getDisplayDistance(this.runningStats.totalDistanceRan) }}
                   </div>
-                </mat-tab>
-              </mat-tab-group>
+              </div>
             
-              <mat-tab-group class="running-stats-component component">
+              <mat-tab-group class="add-goal-component component">
 
                 <mat-tab label="Add a Goal">
 
@@ -96,70 +94,70 @@
                       [(ngModel)]="distanceRan"
                     />
                     <mat-icon (click)="convertDistance()">swap_horizontal_circle</mat-icon>
-                    <button (click)="logRun(distanceRan)">Log in {{ this.kilometers ? 'Kilometers' : 'Miles'}}</button>
+                    <button (click)="logRun(distanceRan)">Log in {{ this.user.kilometers ? 'Kilometers' : 'Miles'}}</button>
                   </div>
                 </mat-tab>
 
 
               </mat-tab-group>
             
-          </div>
+            </div>
 
-          <!-- Goal cards -->
-          <mat-tab-group class="goals-component component" animationDuration="2000ms" class="goals-tabs">
-            
-            <mat-tab label="Active Goals"> 
+            <!-- Goal cards -->
+            <mat-tab-group class="goals-tabs component" animationDuration="2000ms">
               
-              <div *ngIf="user.goals.length">
+              <mat-tab label="Active Goals"> 
                 
-                <div class="goal-div" *ngFor="let goal of user.goals">
-                  <ng-container *ngIf="goal.completed == false">
-                    <mat-card appearance="outlined">
-                      <mat-card-content>
-                        <!-- Goal information -->
-                        <div class="goal-info">
-                          <div>Goal: {{formatPlaceName(goal.placeName)}}</div>
-                          <!-- Delete goal button -->
-                          <button mat-icon-button (click)="deleteGoal(goal)" class="delete-button" aria-label="Delete">
-                            <mat-icon>delete</mat-icon>
-                          </button>
-                        </div>
-                        <div class="goal-info">
-                          <div>Distance: {{getDisplayDistance(goal.distance)}}</div>
-                          <div class="align-right">{{goal.progress ? goal.progress : 0 }}%</div>
-                        </div>
-                        <!-- Progress bar -->
-                        <mat-progress-bar *ngIf="goal.progress !== 100" mode="determinate" value="{{ goal.progress }}"></mat-progress-bar>
-                      </mat-card-content>
-                    </mat-card>
-                    <!-- Appears if goal is completed -->
-                    <div (click)="setGoalCompleted(goal)" class="completed" *ngIf="goal.progress === 100">GOAL COMPLETED!</div>
-                  </ng-container>
-                </div>
-                
-                <mat-tab label="Completed Goals"> 
+                <div *ngIf="user.goals.length">
+                  
                   <div class="goal-div" *ngFor="let goal of user.goals">
-                    <ng-container *ngIf="goal.completed == true">
+                    <ng-container *ngIf="goal.completed == false">
                       <mat-card appearance="outlined">
                         <mat-card-content>
-                          <div>Destination: {{formatPlaceName(goal.placeName)}}</div>
+                          <!-- Goal information -->
                           <div class="goal-info">
-                            <div>Distance Ran: {{getDisplayDistance(goal.distance)}}</div>
+                            <div>Goal: {{formatPlaceName(goal.placeName)}}</div>
+                            <!-- Delete goal button -->
+                            <button mat-icon-button (click)="deleteGoal(goal)" class="delete-button" aria-label="Delete">
+                              <mat-icon>delete</mat-icon>
+                            </button>
                           </div>
+                          <div class="goal-info">
+                            <div>Distance: {{getDisplayDistance(goal.distance)}}</div>
+                            <div class="align-right">{{goal.progress ? goal.progress : 0 }}%</div>
+                          </div>
+                          <!-- Progress bar -->
+                          <mat-progress-bar *ngIf="goal.progress !== 100" mode="determinate" value="{{ goal.progress }}"></mat-progress-bar>
                         </mat-card-content>
                       </mat-card>
+                      <!-- Appears if goal is completed -->
+                      <div (click)="setGoalCompleted(goal)" class="completed" *ngIf="goal.progress === 100">GOAL COMPLETED!</div>
                     </ng-container>
-                  </div>  
-                </mat-tab>
+                  </div>
+                  
+                  <mat-tab label="Completed Goals"> 
+                    <div class="goal-div" *ngFor="let goal of user.goals">
+                      <ng-container *ngIf="goal.completed == true">
+                        <mat-card appearance="outlined">
+                          <mat-card-content>
+                            <div>Destination: {{formatPlaceName(goal.placeName)}}</div>
+                            <div class="goal-info">
+                              <div>Distance Ran: {{getDisplayDistance(goal.distance)}}</div>
+                            </div>
+                          </mat-card-content>
+                        </mat-card>
+                      </ng-container>
+                    </div>  
+                  </mat-tab>
+                  
+                </div>
                 
-              </div>
-              
-              <div class="no-goals" *ngIf="user.goals.length === 0">No Goals added</div>
-              
-            </mat-tab>
-          </mat-tab-group>
+                <div class="no-goals" *ngIf="user.goals.length === 0">No Goals added</div>
+                
+              </mat-tab>
+            </mat-tab-group>
     
-        </div>
+          </div>
         </mat-card>
       </mat-card>
     </div>

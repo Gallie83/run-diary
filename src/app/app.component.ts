@@ -67,7 +67,8 @@ export class AppComponent implements OnInit, AfterViewInit{
       long:       0, 
       placeName:  ''
     },
-    goals: []
+    goals: [],
+    kilometers: true
   };
   public currentGoal: IGoal = {
     placeName: '',
@@ -99,7 +100,6 @@ export class AppComponent implements OnInit, AfterViewInit{
   public addingRun: boolean = false;
 
   public apiResponse: any = [];
-  public kilometers: boolean = true;
 
   public distanceRan: number = 1;
 
@@ -271,16 +271,16 @@ export class AppComponent implements OnInit, AfterViewInit{
   }
 
   public convertDistance(): void {
-    this.kilometers = !this.kilometers;
+    this.user.kilometers = !this.user.kilometers;
   }
 
   // Returns string to display distance value either in Km or Miles 
   public getDisplayDistance(distanceInKm: number | undefined): string {
     if(distanceInKm === 0 || distanceInKm === undefined) {
-      return this.kilometers ? '0Km' : '0 Miles'
+      return this.user.kilometers ? '0Km' : '0 Miles'
     }
 
-    return  this.kilometers ? distanceInKm.toString()+'Km' : (0.621371*distanceInKm).toFixed(2)+' Miles'
+    return  this.user.kilometers ? distanceInKm.toString()+'Km' : (0.621371*distanceInKm).toFixed(2)+' Miles'
   } 
 
   public setGoal(item: any): void {
@@ -332,6 +332,7 @@ export class AppComponent implements OnInit, AfterViewInit{
     
         if(goalIndex >= 0) {
           this.user.goals.splice(goalIndex, 1);
+          this._updateUserData()
         } 
       }
     })
@@ -343,7 +344,7 @@ export class AppComponent implements OnInit, AfterViewInit{
       this.distanceRan = item;
       // console.log(this.distanceRan + ' 1st')
       // If in miles then calculate value before adding to totalDistanceRan
-      if(!this.kilometers) {
+      if(!this.user.kilometers) {
         this.distanceRan = Number((item*1.60934).toFixed(2))
         console.log(this.distanceRan)
       }
@@ -418,9 +419,10 @@ export interface IUserData {
   totalDistance:    number,
   startingLocation: ICoordinates,
   goals:           IGoal[],
+  kilometers: boolean
 }
 
 export interface IRunningStats {
-  totalDistanceRan: number;
-  numberOfRuns:     number;
+  totalDistanceRan: number,
+  numberOfRuns:     number
 }
