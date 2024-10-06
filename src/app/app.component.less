@@ -55,6 +55,40 @@
     margin-bottom: 12px; /* Adds space between each line */
   }
 
+  .input-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 50%; /* Adjust based on your design */
+  }
+
+  // Log run input
+  .input-wrapper {
+    position: relative;
+    width: 100%; 
+    max-width: 300px; 
+  }
+  
+  input[type="number"] {
+    width: 100%;
+    padding-right: 80px; 
+    // border: 1px solid #ccc; 
+    border-radius: 4px; /* Rounded input corners */
+    box-sizing: border-box; /* Ensure padding is included in the width calculation */
+  }
+  
+  span.log-unit {
+    position: absolute;
+    right: 10px; /* Aligns the text to the right */
+    top: 50%;
+    transform: translateY(-50%); /* Vertically centers the text */
+    color: gray; /* Greyed-out color */
+    font-size: medium; /* Slightly smaller font size */
+    pointer-events: none; /* Makes sure the span doesn't interfere with input */
+  }
+  
+  
+  
+
   .add-goal-component {
     display: flex;
     flex-direction: column;

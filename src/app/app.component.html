@@ -18,7 +18,7 @@
           <div class="header">
             <button mat-mini-fab [matMenuTriggerFor]="menu"><mat-icon>menu</mat-icon></button>
             <mat-menu #menu="matMenu">
-              <button mat-menu-item (click)="convertDistance()"><mat-icon>cached</mat-icon> Km/Mi</button>
+              <button mat-menu-item (click)="convertDistance()"><mat-icon>cached</mat-icon> {{ this.user.kilometers ? 'Miles' : 'Kilometers'}} </button>
               <button mat-menu-item (click)="resetDistance()">Reset distance ran 
                 <br>
                 <span style="color: gray; font-size: 0.85em;">(Keeps completed goals)</span>
@@ -83,8 +83,8 @@
                 </mat-tab>
 
                 <mat-tab label="Log a Run">
-                  <div class="content">
-                    <div>How far did you run?</div>
+                  <div>How far did you run?</div>
+                  <div class="input-wrapper">
                     <input
                       type="number"
                       min="0.5"
@@ -93,9 +93,10 @@
                       required
                       [(ngModel)]="distanceRan"
                     />
-                    <mat-icon (click)="convertDistance()">swap_horizontal_circle</mat-icon>
-                    <button (click)="logRun(distanceRan)">Log in {{ this.user.kilometers ? 'Kilometers' : 'Miles'}}</button>
+                    <span class="log-unit">{{ this.user.kilometers ? 'Kilometers' : 'Miles'}}</span>
                   </div>
+                    <!-- <mat-icon (click)="convertDistance()">swap_horizontal_circle</mat-icon> -->
+                    <button (click)="logRun(distanceRan)">Log Run</button>
                 </mat-tab>
 
 
@@ -140,7 +141,13 @@
                       <ng-container *ngIf="goal.completed == true">
                         <mat-card appearance="outlined">
                           <mat-card-content>
-                            <div>Destination: {{formatPlaceName(goal.placeName)}}</div>
+                            <div class="goal-info">
+                              <div>Destination: {{formatPlaceName(goal.placeName)}}</div>
+                              <button mat-icon-button (click)="deleteGoal(goal)" class="delete-button" aria-label="Delete">
+                                <mat-icon>delete</mat-icon>
+                              </button>
+                            </div>
+
                             <div class="goal-info">
                               <div>Distance Ran: {{getDisplayDistance(goal.distance)}}</div>
                             </div>
