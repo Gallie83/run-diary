@@ -93,7 +93,7 @@
                       required
                       [(ngModel)]="distanceRan"
                     />
-                    <span class="log-unit">{{ this.user.kilometers ? 'Kilometers' : 'Miles'}}</span>
+                    <span class="log-unit">{{ this.user.kilometers ? 'Km' : 'Miles'}}</span>
                   </div>
                     <!-- <mat-icon (click)="convertDistance()">swap_horizontal_circle</mat-icon> -->
                     <button (click)="logRun(distanceRan)">Log Run</button>
@@ -169,56 +169,55 @@
       </mat-card>
     </div>
   </div>
-
-  <div class="content" *ngIf="newUser">
-    <mat-card class="opening-form-card" appearance="outlined">
-      <mat-card-content>
-        
-        <div class="form-container">
-          <div class="input-group">
-            <div class="input-label">Username</div>
-            <input
-              (change)="setUsername()"
-              placeholder="some guy"
-              [(ngModel)]="username"
-              required
-            />
-          </div>
-          
-          <div class="input-group">
-            <div class="input-label">Starting Location</div>
-            <input
-              placeholder="Search for your home address"
-              [(ngModel)]="locationSearch"
-              required
-            />
-          </div>
-          
-          <button (click)="generateLocationList()">enter location</button>
+  
+  <!-- Initial screen for new user to enter information -->
+  <mat-card class="opening-form-card" *ngIf="newUser" appearance="outlined">
+    <mat-card-content>
+      
+      <div class="form-container">
+        <div class="input-group">
+          <div class="input-label">Username</div>
+          <input
+            (change)="setUsername()"
+            placeholder="Enter username"
+            [(ngModel)]="username"
+            required
+          />
         </div>
-    
         
-        <!-- Displays locationSearch results -->
-        <div *ngIf="locationDiv" class="scroll-container">
-          <!-- If no results for locationSearch -->
-          <div *ngIf="this.noResultsFound">No Results found please try again</div>
-          
-          <app-address-card 
-            *ngFor="let item of apiResponse;"
-            class="scrollable-card hover"
-            [addressDetails]="item"
-            (click)="setLocation(item)"
-            [ngClass]="{'highlight': selectedAddress === item}">
-          </app-address-card>
-
+        <div class="input-group">
+          <div class="input-label">Starting Location</div>
+          <input
+            placeholder="Search for your home address"
+            [(ngModel)]="locationSearch"
+            required
+          />
         </div>
+        
+        <button (click)="generateLocationList()">enter location</button>
+      </div>
+  
+      
+      <!-- Displays locationSearch results -->
+      <div *ngIf="locationDiv" class="scroll-container">
+        <!-- If no results for locationSearch -->
+        <div *ngIf="this.noResultsFound">No Results found please try again</div>
+        
+        <app-address-card 
+          *ngFor="let item of apiResponse;"
+          class="scrollable-card hover"
+          [addressDetails]="item"
+          (click)="setLocation(item)"
+          [ngClass]="{'highlight': selectedAddress === item}">
+        </app-address-card>
 
-        <!-- Submits Form -->
-        <button class="button-container" (click)="saveForm()" [disabled]="saveDisabled">Save Form</button>
+      </div>
 
-      </mat-card-content>
-    </mat-card>
-  </div>
+      <!-- Submits Form -->
+      <button class="button-container" (click)="saveForm()" [disabled]="saveDisabled">Save Form</button>
+
+    </mat-card-content>
+  </mat-card>
 </main>
 
 
