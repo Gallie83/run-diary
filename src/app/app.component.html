@@ -43,9 +43,10 @@
           </div>
 
           <div class="main-content">
+
             <!-- Goal cards -->
             <mat-tab-group class="goals-tabs component" animationDuration="2000ms">
-              
+  
               <mat-tab label="Active Goals"> 
                 
                 <div *ngIf="user.goals.length">
@@ -102,6 +103,40 @@
                 
               </mat-tab>
             </mat-tab-group>
+
+            <div class="left-align">
+              
+              <mat-tab-group class="add-goal-component component">
+                
+                <mat-tab label="Add a Goal">
+
+                  <div class="add-goal-container">
+                      <div>Next Goal Location</div>
+                      <input
+                      placeholder="Search for an address"
+                      [(ngModel)]=locationSearch
+                      required
+                      />
+                      <button (click)="generateLocationList()">enter location</button>
+                    <div *ngIf="addingGoal" class="location-cards">
+                      <!-- If no results for locationSearch -->
+                      <div *ngIf="this.noResultsFound">No Results found please try again</div>
+                        <!-- Displays locationSearch results -->
+                        <div *ngFor="let item of apiResponse">
+                          <app-address-card 
+                            class="scrollable-card"
+                            [addressDetails]="item"
+                            (click)="setGoal(item)"
+                            [ngClass]="{'highlight': selectedAddress === item}">
+                        </app-address-card>
+                      </div>
+                    </div>
+                  </div> 
+
+                </mat-tab>
+              </mat-tab-group>
+            
+            </div>
     
           </div>
         </mat-card>
