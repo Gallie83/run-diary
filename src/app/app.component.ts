@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatButtonModule} from '@angular/material/button';
+import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -38,6 +39,7 @@ import { ResetConfirmComponent } from './resetConfirm/resetConfirm.component';
     MatButtonModule,
     MatMenuModule,
     MatIconModule,
+    MatSidenavModule,
     MatFormFieldModule,
     MatNativeDateModule,
     AddressCardComponent

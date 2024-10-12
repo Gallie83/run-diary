@@ -1,22 +1,36 @@
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content below * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * Delete the template below * * * * * * * * * -->
-<!-- * * * * * * * to get started with your project! * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-
-
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <main class="main">
   <div class="content" *ngIf="!newUser">
+    
     <div>
       <mat-card appearance="outlined">
         <mat-card>
-          <div class="header">
-            <button mat-mini-fab [matMenuTriggerFor]="menu"><mat-icon>menu</mat-icon></button>
+          <div class="sidebar">
+            <div class="user-info-component component">
+              <div class="hover" (click)="changingUsername = !changingUsername">Name: {{ this.user.username}}</div>
+              
+              <div *ngIf="changingUsername">
+                <input matInput
+                maxlength="20"
+                minlength="1"
+                placeholder="New Username"
+                [(ngModel)]="newUsername"
+                />
+                <div>
+                  <button mat-button color="warn" (click)="changingUsername = !changingUsername">Cancel</button>
+                  <button mat-button (click)="changeUsername()">Confirm</button>
+                </div>
+              </div>
+        
+                <div>Home location: {{ this.formatPlaceName(this.user.startingLocation.placeName) }}</div>
+                <div>Runs total: {{ this.runningStats.numberOfRuns }}</div>
+                <div>
+                  Total Distance: {{ getDisplayDistance(this.runningStats.totalDistanceRan) }}
+                </div>
+            </div>
+
+            <button class="settings-button" mat-raised-button [matMenuTriggerFor]="menu">Settings</button>
             <mat-menu #menu="matMenu">
               <button mat-menu-item (click)="convertDistance()"><mat-icon>cached</mat-icon> {{ this.user.kilometers ? 'Miles' : 'Kilometers'}} </button>
               <button mat-menu-item (click)="resetDistance()">Reset distance ran 
@@ -25,85 +39,10 @@
               </button>
               <button mat-menu-item style="color: red;" (click)="deleteAccount()">Reset Account</button>
             </mat-menu>
+
           </div>
-          <div class="container">
-            
-            <div class="left-align">
 
-              <div class="user-info-component component">
-                  <div class="hover" (click)="changingUsername = !changingUsername">Name: {{ this.user.username}}</div>
-                  
-                  <div *ngIf="changingUsername">
-                    <input matInput
-                      maxlength="20"
-                      minlength="1"
-                      placeholder="New Username"
-                      [(ngModel)]="newUsername"
-                    />
-                    <div>
-                      <button mat-button color="warn" (click)="changingUsername = !changingUsername">Cancel</button>
-                      <button mat-button (click)="changeUsername()">Confirm</button>
-                    </div>
-                  </div>
-
-                  <div>Home location: {{ this.formatPlaceName(this.user.startingLocation.placeName) }}</div>
-                  <div>Runs total: {{ this.runningStats.numberOfRuns }}</div>
-                  <div>
-                    Total Distance: {{ getDisplayDistance(this.runningStats.totalDistanceRan) }}
-                  </div>
-              </div>
-            
-              <mat-tab-group class="add-goal-component component">
-
-                <mat-tab label="Add a Goal">
-
-                  <div class="add-goal-container">
-                      <div>Next Goal Location</div>
-                      <input
-                      placeholder="Search for your first goal address"
-                      [(ngModel)]=locationSearch
-                      required
-                      />
-                      <button (click)="generateLocationList()">enter location</button>
-                    <div *ngIf="addingGoal" class="location-cards">
-                      <!-- If no results for locationSearch -->
-                      <div *ngIf="this.noResultsFound">No Results found please try again</div>
-                        <!-- Displays locationSearch results -->
-                        <div *ngFor="let item of apiResponse">
-                          <app-address-card 
-                            class="scrollable-card"
-                            [addressDetails]="item"
-                            (click)="setGoal(item)"
-                            [ngClass]="{'highlight': selectedAddress === item}">
-                        </app-address-card>
-                      </div>
-                    </div>
-                  </div> 
-
-                </mat-tab>
-
-                <mat-tab label="Log a Run">
-                  <div>How far did you run?</div>
-                  <div class="input-wrapper">
-                    <input
-                      type="number"
-                      min="0.5"
-                      value="{{this.distanceRan}}"
-                      placeholder="Run Distance"
-                      required
-                      [(ngModel)]="distanceRan"
-                    />
-                    <span class="log-unit">{{ this.user.kilometers ? 'Km' : 'Miles'}}</span>
-                  </div>
-                    <!-- <mat-icon (click)="convertDistance()">swap_horizontal_circle</mat-icon> -->
-                    <button (click)="logRun(distanceRan)">Log Run</button>
-                </mat-tab>
-
-
-              </mat-tab-group>
-            
-            </div>
-
+          <div class="main-content">
             <!-- Goal cards -->
             <mat-tab-group class="goals-tabs component" animationDuration="2000ms">
               
