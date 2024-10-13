@@ -7,6 +7,7 @@
       <mat-card appearance="outlined">
         <mat-card>
           <div class="sidebar">
+
             <div class="user-info-component component">
               <div class="hover" (click)="changingUsername = !changingUsername">Name: {{ this.user.username}}</div>
               
@@ -29,6 +30,27 @@
                   Total Distance: {{ getDisplayDistance(this.runningStats.totalDistanceRan) }}
                 </div>
             </div>
+
+
+            <mat-expansion-panel class="component" hideToggle>
+              <mat-expansion-panel-header>
+                <mat-panel-title> Log a Run + </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div>How far did you run?</div>
+              <div class="input-wrapper">
+                <input
+                  type="number"
+                  min="0.5"
+                  value="{{this.distanceRan}}"
+                  placeholder="Run Distance"
+                  required
+                  [(ngModel)]="distanceRan"
+                />
+                <span class="log-unit">{{ this.user.kilometers ? 'Km' : 'Miles'}}</span>
+              </div>
+                <!-- <mat-icon (click)="convertDistance()">swap_horizontal_circle</mat-icon> -->
+                <button (click)="logRun(distanceRan)">Log Run</button>
+            </mat-expansion-panel>
 
             <button class="settings-button" mat-raised-button [matMenuTriggerFor]="menu">Settings</button>
             <mat-menu #menu="matMenu">
@@ -66,7 +88,7 @@
                           <div class="goal-info">
                             <div>Distance: {{getDisplayDistance(goal.distance)}}</div>
                             <div class="align-right">{{goal.progress ? goal.progress : 0 }}%</div>
-                          </div>
+                          </div>    
                           <!-- Progress bar -->
                           <mat-progress-bar *ngIf="goal.progress !== 100" mode="determinate" value="{{ goal.progress }}"></mat-progress-bar>
                         </mat-card-content>
@@ -104,7 +126,7 @@
               </mat-tab>
             </mat-tab-group>
 
-            <div class="left-align">
+            <div class="right-content-align">
               
               <mat-tab-group class="add-goal-component component">
                 

@@ -1,10 +1,11 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ChangeDetectionStrategy, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatExpansionModule} from '@angular/material/expansion';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatMenuModule} from '@angular/material/menu';
@@ -37,6 +38,7 @@ import { ResetConfirmComponent } from './resetConfirm/resetConfirm.component';
     MatCardModule,
     MatProgressBarModule,
     MatButtonModule,
+    MatExpansionModule,
     MatMenuModule,
     MatIconModule,
     MatSidenavModule,
@@ -44,6 +46,7 @@ import { ResetConfirmComponent } from './resetConfirm/resetConfirm.component';
     MatNativeDateModule,
     AddressCardComponent
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [  
     MatSlideToggleModule,
     MatNativeDateModule  
@@ -58,6 +61,8 @@ import { ResetConfirmComponent } from './resetConfirm/resetConfirm.component';
 })
 export class AppComponent implements OnInit, AfterViewInit{
   constructor(private https: HttpClient, public dialog: MatDialog) { }
+
+  readonly panelOpenState = signal(false);
   
   title = 'run-diary';
 
