@@ -46,8 +46,6 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 # Features
 
-RunDiary
-
 ## Existing Features
 
 - ### Initial Form Screen
