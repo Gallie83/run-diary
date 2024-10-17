@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
+import {MatDividerModule} from '@angular/material/divider';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatExpansionModule} from '@angular/material/expansion';
@@ -37,6 +38,7 @@ import { ResetConfirmComponent } from './resetConfirm/resetConfirm.component';
     MatSlideToggleModule,
     MatCardModule,
     MatProgressBarModule,
+    MatDividerModule,
     MatButtonModule,
     MatExpansionModule,
     MatMenuModule,

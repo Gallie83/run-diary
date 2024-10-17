@@ -8,7 +8,11 @@ RunDiary is a web application where users can track their running progress towar
 
 This project is my introduction to working with Angular and has been a collaborative effort with Luke, who had the initial idea and set up the foundation. From there, I took over, developing most of the app's logic and functionality.
 
+This project is currently under development. The basic structure and design have been implemented, but additional styling and features are being actively worked on.
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.1.3.
+
+![Homepage Image](assets/Homepage.png)
 
 # Contents
 
@@ -16,12 +20,12 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 - [**Features**](#features)
   - [**Existing Features**](#existing-features)
     - [Initial Form Screen](#initial-form-screen)
-    - [Dropdown Menu](#dropdown-menu)
     - [User Information](#user-information)
     - [Add Goal](#add-goal)
     - [Log Run](#log-run)
     - [Active Goals](#active-goal)
     - [Completed Goals](#compeleted-goal)
+    - [Settings Button](#settings-button)
     - [Confirmation Modals](#confirmation-modals)
 
 [Back to top](#contents)
@@ -48,56 +52,60 @@ RunDiary
 
 - ### Initial Form Screen
 
-  - If no data is detected in local storage, the user will be shown an inital form screen, where they are asked to enter a username, and choose their home location, before being directed to the main screen.
+  - If no data is detected in local storage, the user will be shown an inital form screen, where they are asked to enter a username, and choose their home location. The Submit form button will be inactive until the user has entered a username and chosen a starting location.
 
-  <!-- <Initial form image> -->
+![Intial Form](assets/initial-form.png)
 
-  ### Dropdown Menu
+![Intial Form 2](assets/initial-form2.png)
 
-  - This dropdown menu has a number of features. Firstly, the user can change between Kilometers or Miles based on their preference. This dynamically updates all distances to a decimal place of 2.
+### User Information
 
-  - User can also set their running stats back to 0. This is useful if a user wants to start reset the distance they have ran so far, without deleting all the goals they have completed so far.
+- The users information is displayed at the top of the screen with their current running stats. The user is able to click on their username and change it at anytime.
 
-  - Lastly users have the option to reset everything. This will wipe all the users information and reload the page to the initial form screen.
+![User Info](assets/user-info.png)
 
-  <!-- <Dropdown menu image>   -->
+### Add Goal
 
-  ### User Information
+- Users can enter a location and choose from a list which they want to add as a goal. The users current total distance ran will then be used to calculate how much farther they have until they reach that goal.
 
-  - The users information is displayed at the top of the screen with their current running stats. The user is able to click on their username and change it at anytime.
+![Add a Goal](assets/add-goal.png)
 
-  <!-- <User info image> -->
+### Log Run
 
-  ### Add Goal
+- Here, users can log how far they have ran. This will automatically update their progress towards any active goals that they have.
 
-  - Users can enter a location and choose from a list which they want to add as a goal. The users current total distance ran will then be used to calculate how much farther they have until they reach that goal.
+![Completed Goals](assets/log-run.png)>
 
-  <!-- <Add Goal image>  -->
+### Active Goals
 
-  ### Log Run
+- A list is displayed with an active goals the user has added. The user can see the goal name, distance from their home location and a progress bar with how much percent they have so far.
 
-  - Here, users can log how far they have ran. This will automatically update their progress towards any active goals that they have.
+-If the user has ran the total goal distance, then a clickable green section with 'GOAL COMPLETED' appears beneath the goal, that then moves it to the Completed Goals tab. Users have the option to delete a goal at any time.
 
-  <!-- <Log Run image> -->
+![Active Goals](assets/active-goals.png)
 
-  ### Active Goals
+### Completed Goals
 
-  - A list is displayed with an active goals the user has added. The user can see the goal name, distance from their home location and a progress bar with how much percent they have so far.
+- Similar to the Active goals section, the completed goals displays any goals the user has achieved, with the total distance that the user had ran. Any completed goals can also be deleted.
 
-  -If the user has ran the total goal distance, then a clickable green section with 'GOAL COMPLETED' appears beneath the goal, that then moves it to the Completed Goals tab. Users have the option to delete a goal at any time.
+![Completed Goals](assets/completed-goals.png)
 
-  <!-- <Active Goals image> -->
+### Settings Button
 
-  ### Completed Goals
+- This dropdown menu has a number of features. Firstly, the user can change between Kilometers or Miles based on their preference. This dynamically updates all distances to a decimal place of 2.
 
-  - Similar to the Active goals section, the completed goals displays any goals the user has achieved, with the total distance that the user had ran. Any completed goals can also be deleted.
+- User can also set their running stats back to 0. This is useful if a user wants to start reset the distance they have ran so far, without deleting all the goals they have completed so far.
 
-  <!-- <Completed Goals image> -->
+- Lastly users have the option to reset everything. This will wipe all the users information and reload the page to the initial form screen.
 
-  ### Confirmation Modals
+![Settings Button](assets/settings-button.png)
 
-  - There are two modals that pop up to confirm a users actions. One for confirming they want to delete a goal and another to confirm they want to reset their running stats/all of their information. This is to prevent any accidental deletions or data loss.
+### Confirmation Modals
 
-  <!-- Modal images -->
+- There are two modals that pop up to confirm a users actions. One for confirming they want to delete a goal and another to confirm they want to reset their running stats/all of their information. This is to prevent any accidental deletions or data loss.
+
+![Delete Modal](assets/delete-modal.png)
+
+![Reset Modal](assets/reset-modal.png)
 
 [Back to top](#contents)
