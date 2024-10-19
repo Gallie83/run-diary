@@ -24,6 +24,7 @@ import { AddressCardComponent, IAddressDetails } from './addressCard.component';
 import NodeGeolocation from 'nodejs-geolocation';
 import { DeleteConfirmComponent } from './deleteConfirm/deleteConfirm.component';
 import { ResetConfirmComponent } from './resetConfirm/resetConfirm.component';
+import { ImportModalComponent } from './importModal/importModal.component';
 
 @Component({
   selector: 'app-root',
@@ -158,6 +159,10 @@ export class AppComponent implements OnInit, AfterViewInit{
     }
   }
 
+  public convertDistance(): void {
+    this.user.kilometers = !this.user.kilometers;
+  }
+
   public resetDistance(): void {
     const dialogRef = this.dialog.open(ResetConfirmComponent);
     dialogRef.afterClosed().subscribe(result => {
@@ -171,20 +176,24 @@ export class AppComponent implements OnInit, AfterViewInit{
   }
 
   public downloadLocalStorage(): void {
-  const localStorageData = JSON.stringify(localStorage, null, 2);
+    const localStorageData = JSON.stringify(localStorage, null, 2);
 
-  // Create blob with Json Data
-  const blob = new Blob([localStorageData], { type: 'application/json' });
+    // Create blob with Json Data
+    const blob = new Blob([localStorageData], { type: 'application/json' });
 
-  // Temporary URL for blob
-  const url = window.URL.createObjectURL(blob)
-  // Link to trigger download
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'RunDiaryData.json'
-  a.click();
-  // Free up memory by releasing url object
-  window.URL.revokeObjectURL(url);
+    // Temporary URL for blob
+    const url = window.URL.createObjectURL(blob)
+    // Link to trigger download
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'RunDiaryData.json'
+    a.click();
+    // Free up memory by releasing url object
+    window.URL.revokeObjectURL(url);
+  }
+
+  public openImportDataModal(): void {
+    const dialogRef = this.dialog.open(ImportModalComponent);
 
   }
 
@@ -297,10 +306,6 @@ export class AppComponent implements OnInit, AfterViewInit{
     }
   }
 
-  public convertDistance(): void {
-    this.user.kilometers = !this.user.kilometers;
-  }
-
   // Returns string to display distance value either in Km or Miles 
   public getDisplayDistance(distanceInKm: number | undefined): string {
     if(distanceInKm === 0 || distanceInKm === undefined) {
@@ -352,18 +357,6 @@ export class AppComponent implements OnInit, AfterViewInit{
 
   public deleteGoal(goal: any): void {
     const dialogRef = this.dialog.open(DeleteConfirmComponent);
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        const goalIndex = this.user.goals.indexOf(goal);
-        console.log(goalIndex);
-    
-        if(goalIndex >= 0) {
-          this.user.goals.splice(goalIndex, 1);
-          this._updateUserData()
-        } 
-      }
-    })
-
   }
   
   public logRun(item: number): void {
