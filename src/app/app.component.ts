@@ -170,6 +170,24 @@ export class AppComponent implements OnInit, AfterViewInit{
     })
   }
 
+  public downloadLocalStorage(): void {
+  const localStorageData = JSON.stringify(localStorage, null, 2);
+
+  // Create blob with Json Data
+  const blob = new Blob([localStorageData], { type: 'application/json' });
+
+  // Temporary URL for blob
+  const url = window.URL.createObjectURL(blob)
+  // Link to trigger download
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'RunDiaryData.json'
+  a.click();
+  // Free up memory by releasing url object
+  window.URL.revokeObjectURL(url);
+
+  }
+
   public deleteAccount(): void {
     const dialogRef = this.dialog.open(ResetConfirmComponent);
     dialogRef.afterClosed().subscribe(result => {
@@ -241,6 +259,7 @@ export class AppComponent implements OnInit, AfterViewInit{
     this.noResultsFound = false;
     this.locationDiv = true;
     this.addingGoal = true;
+    console.log('Searching...')
     this.convertAddress(this.locationSearch);
   }
 
@@ -261,7 +280,6 @@ export class AppComponent implements OnInit, AfterViewInit{
           this.noResultsFound = true;
         }
       });
-
 
     return valueToReturn
   } 
