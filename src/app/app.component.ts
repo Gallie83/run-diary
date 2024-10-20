@@ -49,7 +49,7 @@ import { ImportModalComponent } from './importModal/importModal.component';
     MatNativeDateModule,
     AddressCardComponent
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [  
     MatSlideToggleModule,
     MatNativeDateModule  
@@ -122,12 +122,12 @@ export class AppComponent implements OnInit, AfterViewInit{
     // Check if user exists in local storage
       try {
         storage = localStorage.getItem('userData');
+        console.log('userData')
         userRunningStats = localStorage.getItem('userRunningStats');
         
         // Checks if user has data in localStorage
         if(storage !== "" && storage ) {
-          storage = JSON.parse(storage);
-          this.user = storage;
+          this.user = JSON.parse(storage);
         }
         
         if(userRunningStats) {
@@ -176,7 +176,10 @@ export class AppComponent implements OnInit, AfterViewInit{
   }
 
   public downloadLocalStorage(): void {
-    const localStorageData = JSON.stringify(localStorage, null, 2);
+    // Retrieve from localStorage
+    const userData = JSON.parse(localStorage.getItem('userData')!); // Parse back to an object
+
+    const localStorageData = JSON.stringify(userData);
 
     // Create blob with Json Data
     const blob = new Blob([localStorageData], { type: 'application/json' });

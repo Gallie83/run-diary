@@ -30,6 +30,11 @@ export class ImportModalComponent {
           this.fileData = JSON.parse(e.target?.result as string);
           // Ensure JSON structure is in expected format
           const isValid = this.validateJson(this.fileData);
+          if(!isValid) {
+            alert('Invalid JSON structure. Please try again')
+            console.log(this.fileData)
+            this.fileData = null;
+          }
           this.errorMessage = null;
         } catch (error) {
           this.errorMessage = 'Invalid JSON format. Please try again.'
@@ -48,6 +53,7 @@ export class ImportModalComponent {
         }
       }
       alert('Data successfully imported into localStorage');
+      console.log(localStorage)
       // Close the modal and indicate success
       this.dialogRef.close(true); 
     }
@@ -68,19 +74,29 @@ export class ImportModalComponent {
       ) {
         return true;
       }
+      console.log('init')
+
       return false;
     }
   
     // Validate starting location structure
     validateLocation(location: any): boolean {
-      return (
+      if (
         location.hasOwnProperty('lat') &&
-        typeof location.lat === 'number' &&
+        (typeof location.lat === 'number' || !isNaN(Number(location.lat))) &&
         location.hasOwnProperty('long') &&
-        typeof location.long === 'number' &&
+        (typeof location.long === 'number' || !isNaN(Number(location.long))) &&
         location.hasOwnProperty('placeName') &&
         typeof location.placeName === 'string'
-      );
+      ) {
+        // Convert lat and long to numbers if they are strings
+        location.lat = Number(location.lat);
+        location.long = Number(location.long);
+        return true;
+      } else {
+        console.log('loc')
+        return false
+      }
     }
   
     // Validate goals structure
