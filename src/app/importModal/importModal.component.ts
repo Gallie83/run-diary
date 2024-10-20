@@ -20,6 +20,7 @@ export class ImportModalComponent {
   
   constructor(public dialogRef: MatDialogRef<ImportModalComponent>) {}
 
+  // User chooses file ot import which is then checked for structure validation 
   public onFileSelected(event: Event): void {
     const target = event.target as HTMLInputElement;
     if( target.files && target.files.length) {
@@ -45,17 +46,19 @@ export class ImportModalComponent {
     }
   }
 
+  // Clears localStorage and sets with validated JSON
   public importData(): void {
     if (this.fileData) {
+      localStorage.clear()
       for (const key in this.fileData) {
         if (this.fileData.hasOwnProperty(key)) {
-          localStorage.setItem(key, JSON.stringify(this.fileData[key]));
+          localStorage.setItem('userData', JSON.stringify(this.fileData));
         }
       }
       alert('Data successfully imported into localStorage');
-      console.log(localStorage)
       // Close the modal and indicate success
       this.dialogRef.close(true); 
+      window.location.reload()
     }
   }
 

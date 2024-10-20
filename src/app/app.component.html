@@ -216,6 +216,10 @@
       <!-- Submits Form -->
       <button class="button-container" (click)="saveForm()" [disabled]="saveDisabled">Save Form</button>
 
+      <p>Already used RunDiary?  
+        <a (click)="openImportDataModal()">Import JSON</a>
+      </p>
+
     </mat-card-content>
   </mat-card>
 </main>

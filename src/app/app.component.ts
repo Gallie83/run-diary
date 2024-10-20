@@ -122,7 +122,7 @@ export class AppComponent implements OnInit, AfterViewInit{
     // Check if user exists in local storage
       try {
         storage = localStorage.getItem('userData');
-        console.log('userData')
+        console.log(storage)
         userRunningStats = localStorage.getItem('userRunningStats');
         
         // Checks if user has data in localStorage
