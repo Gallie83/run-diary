@@ -94,6 +94,19 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 - User can also set their running stats back to 0. This is useful if a user wants to start reset the distance they have ran so far, without deleting all the goals they have completed so far.
 
+- Users can export their data as a JSON file incase they want to clear their local storage or open their progress on another browser.
+
+![JSON Download](assets/json-download.png)
+
+- Users can upload a JSON file to resume their progress.
+
+![Import Modal](assets/import-modal.png)
+
+- A validation check will be done on this JSON file ot ensure that the expected JSON structure is met, and the user will be returned a success/failure message.
+
+![Import Success](assets/import-success.png)
+![Import Failure](assets/import-failure.png)
+
 - Lastly users have the option to reset everything. This will wipe all the users information and reload the page to the initial form screen.
 
 ![Settings Button](assets/settings-button.png)
