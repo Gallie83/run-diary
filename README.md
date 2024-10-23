@@ -92,6 +92,8 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 - This dropdown menu has a number of features. Firstly, the user can change between Kilometers or Miles based on their preference. This dynamically updates all distances to a decimal place of 2.
 
+![Settings Button](assets/settings-button.png)
+
 - User can also set their running stats back to 0. This is useful if a user wants to start reset the distance they have ran so far, without deleting all the goals they have completed so far.
 
 - Users can export their data as a JSON file incase they want to clear their local storage or open their progress on another browser.
@@ -108,8 +110,6 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 ![Import Failure](assets/import-failure.png)
 
 - Lastly users have the option to reset everything. This will wipe all the users information and reload the page to the initial form screen.
-
-![Settings Button](assets/settings-button.png)
 
 ### Confirmation Modals
 
