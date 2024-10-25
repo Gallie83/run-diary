@@ -1,27 +1,27 @@
 import { Component, Input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector:    'app-address-card',
   standalone:  true,
   imports: [    
-    MatCardModule
+    MatCardModule,
+    NgClass
   ],
   template: `
-    <mat-card>
+    <mat-card [ngClass]="{ 'highlight': highlight }">
   <mat-card-title>{{ addressDetails?.display_name ? addressDetails?.display_name : "Title" }}</mat-card-title>
   <mat-card-content>
-    <!-- <div>Lat:{{ addressDetails?.lat ? addressDetails?.lat: "0" }}</div> 
-    <div>Lon:{{ addressDetails?.lon ? addressDetails?.lon: "0" }}</div>  -->
   </mat-card-content>
 </mat-card>
   `,
-  styles: ``
+  styleUrls: ['addressCard.component.less']
 })
 export class AddressCardComponent {
 
   @Input() addressDetails: IAddressDetails | undefined;
-
+  @Input() highlight: boolean = false;
 }
 
 export interface IAddressDetails {

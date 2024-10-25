@@ -19,7 +19,7 @@ import { environment } from '../environments/environment.development';
 import {HttpClient} from '@angular/common/http';
 
 import { Injectable } from  '@angular/core';
-import { AddressCardComponent, IAddressDetails } from './addressCard.component';
+import { AddressCardComponent, IAddressDetails } from './addressCard/addressCard.component';
 
 import NodeGeolocation from 'nodejs-geolocation';
 import { DeleteConfirmComponent } from './deleteConfirm/deleteConfirm.component';

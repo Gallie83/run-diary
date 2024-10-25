@@ -142,15 +142,16 @@
                       placeholder="Search for an address"
                       [(ngModel)]=locationSearch
                       required
+                      (keydown.enter)="generateLocationList()"
                       />
-                      <button (click)="generateLocationList()">enter location</button>
-                    <div *ngIf="addingGoal" class="location-cards">
+                      <button class="location-button" (click)="generateLocationList()">enter location</button>
+                    <div *ngIf="addingGoal" class="location-list-div">
                       <!-- If no results for locationSearch -->
                       <div *ngIf="this.noResultsFound">No Results found please try again</div>
                         <!-- Displays locationSearch results -->
                         <div *ngFor="let item of apiResponse">
                           <app-address-card 
-                            class="scrollable-card"
+                          class="hover"
                             [addressDetails]="item"
                             (click)="setGoal(item)"
                             [ngClass]="{'highlight': selectedAddress === item}">
@@ -191,10 +192,12 @@
             placeholder="Search for your home address"
             [(ngModel)]="locationSearch"
             required
+            (keydown.enter)="generateLocationList()"
           />
+          
+          <button class="location-button" (click)="generateLocationList()">Search</button>
         </div>
-        
-        <button (click)="generateLocationList()">enter location</button>
+
       </div>
   
       
@@ -205,20 +208,20 @@
         
         <app-address-card 
           *ngFor="let item of apiResponse;"
-          class="scrollable-card hover"
+          class="hover"
           [addressDetails]="item"
+          [highlight]="selectedAddress === item"
           (click)="setLocation(item)"
-          [ngClass]="{'highlight': selectedAddress === item}">
+          >
         </app-address-card>
 
       </div>
 
       <!-- Submits Form -->
-      <button class="button-container" (click)="saveForm()" [disabled]="saveDisabled">Save Form</button>
+      <button class="button-container" (click)="saveForm()" [disabled]="saveDisabled">Start Running!</button>
 
-      <p>Already used RunDiary?  
-        <a (click)="openImportDataModal()">Import JSON</a>
-      </p>
+      <!-- Import prevoius JSON data -->
+      <p>Already used RunDiary?<a (click)="openImportDataModal()">Import JSON</a></p>
 
     </mat-card-content>
   </mat-card>

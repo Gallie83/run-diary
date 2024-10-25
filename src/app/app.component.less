@@ -46,9 +46,9 @@
     border: 1px solid black;
   }
 
-  mat-divider {
-    margin: 0;
-  }
+  // mat-divider {
+  //   margin: 0;
+  // }
 
   // Main content box stylings  
   .main-content {
@@ -64,6 +64,64 @@
     border-radius: 5px;
   }
 
+  // Active/Completed goals component stylings
+  .goals-tabs {
+    // background-color: #f5f5f5; 
+    border-radius: 8px; 
+    height: 100%;
+    margin-right: 2%;
+    overflow-y: auto; 
+    min-height: 500px;
+    max-height: 500px;
+    width: 45%; 
+    overflow: hidden; 
+    transition: max-width 0.3s ease-in-out;
+  }
+
+  .goal-div {
+    background-color: green;
+    margin: 2%;
+    border-radius: 25px;
+   }
+   
+   .goal-info { 
+     display: flex;
+     justify-content: space-between; 
+     align-items: center; 
+   }
+   
+   mat-progress-bar {
+     margin-top: 5px;
+   }
+ 
+   .delete-button {
+     color: #f44336;
+     transition: transform 0.2s ease-in-out;
+   }
+ 
+   .delete-button:hover {
+     color: #d32f2f;
+     transform: scale(1.1); 
+   }
+ 
+   .delete-button:focus {
+     outline: none; 
+   }
+   
+   .completed {
+     text-align: center;
+     font-size: large;
+     font-weight: bold;
+     color:white; 
+     cursor: pointer;
+   }
+ 
+   .no-goals {
+     text-align: center;
+   }
+
+  // Add Goal component stylings
+
   .right-content-align {
     display: flex; 
     flex-direction: column;
@@ -75,6 +133,8 @@
     height: 100%;
     width: 100%;
     // background-color: white;
+    display: flex;
+    flex-direction: column;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     padding: 2%;
     min-height: 500px;
@@ -82,15 +142,10 @@
     overflow: hidden;
   }
   
-  .input-wrapper {
-    position: relative;
-    display: inline-block;
-    width: 50%; 
-  }
-  
   // Log run input
   .input-wrapper {
     position: relative;
+    display: inline-block;
     width: 100%; 
     max-width: 300px; 
   }
@@ -113,27 +168,10 @@
     pointer-events: none; 
   }
   
-  .add-goal-component {
-    display: flex;
-    flex-direction: column;
-  }
-  
   .hover:hover {
     cursor: pointer;
-    color: blue;
-  }
-  
-  .goals-tabs {
-    // background-color: #f5f5f5; 
-    border-radius: 8px; 
-    height: 100%;
-    margin-right: 2%;
-    overflow-y: auto; 
-    min-height: 500px;
-    max-height: 500px;
-    width: 45%; 
-    overflow: hidden; 
-    transition: max-width 0.3s ease-in-out;
+    color: #F038FF;
+    transition: all 0.2s ease-in-out;   
   }
 
   .add-goal-container {
@@ -141,12 +179,23 @@
     flex-direction: column;
   }
 
-  .location-cards {
+  .location-button {
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 1% 0%;
+  }
+
+  .location-list-div {
+    background-color: black;
+    border-radius: 5px;
     overflow-y: auto;
     width: 100%;
   }
 
-  .location-cards div {
+  .location-list-div div {
     width: 100%; /* Ensure the location cards do not expand the container */
   }
 
@@ -155,55 +204,15 @@
     margin: 5px;
   }
 
-    app-address-card:hover {
-    background-color: #e0e0e0; 
+  app-address-card:hover {
+    color: black;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); 
+    transform: translateY(-4px); 
   }
 
   .align-right {
     text-align: right;
     margin-bottom: 5px;
-  }
-
-  .goal-div {
-   background-color: green;
-   margin: 2%;
-   border-radius: 25px;
-  }
-  
-  .goal-info { 
-    display: flex;
-    justify-content: space-between; 
-    align-items: center; 
-  }
-  
-  mat-progress-bar {
-    margin-top: 5px;
-  }
-
-  .delete-button {
-    color: #f44336;
-    transition: transform 0.2s ease-in-out;
-  }
-
-  .delete-button:hover {
-    color: #d32f2f;
-    transform: scale(1.1); 
-  }
-
-  .delete-button:focus {
-    outline: none; 
-  }
-  
-  .completed {
-    text-align: center;
-    font-size: large;
-    font-weight: bold;
-    color:white; 
-    cursor: pointer;
-  }
-
-  .no-goals {
-    text-align: center;
   }
 
 /* Initial form screen stylings */
@@ -246,27 +255,25 @@
     box-sizing: border-box;
   }
 
-  .opening-form-card button {
-    background-color: #007bff; /* Primary color */
-    color: white;
+  .button-container {
+    background-color: black; /* Primary color */
+    color: #F038FF;
     border: none;
     padding: 10px 15px;
     font-size: 1rem;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-  }
-
-  .opening-form-card button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
-
-  .button-container {
     width: 100%;
     display: flex;
     justify-content: center;
     margin-top: 20px;
+  }
+
+  .opening-form-card button:disabled {
+    background-color: #ccc;
+    color: white;
+    cursor: not-allowed;
   }
 
   .no-results-found {
@@ -275,46 +282,16 @@
   }
   
   .scroll-container {
-    max-height: 400px; 
-
+    background-color: black;
+    max-height: 400px;
     overflow-y: auto; 
     padding: 10px;
-    border: 1px solid #ccc;
     border-radius: 5px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); 
   }
 
-  .scrollable-card {
-    margin-bottom: 10px; 
-    transition: all 0.3s ease-in-out;
-    cursor: pointer;
-  }
-
-  .scrollable-card:hover {
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); 
-    transform: translateY(-4px);    
-  }
-
-  .highlight {
-    border: 8px solid #4caf50; 
-    background-color: #f1f8e9; 
-    border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-    transition: all 0.3s ease-in-out 
-  }
-
-  .highlight:hover {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);     
-  }
-
-  .button-container {
-    display: flex;
-    justify-content: center;
-    width: 200px;
-    margin: 10px 20px;
-  }
-
   a {
-    color: #007bff;
+    color: #F038FF;
     cursor: pointer;
+    text-decoration: underline;
   }
