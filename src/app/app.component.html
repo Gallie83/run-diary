@@ -204,8 +204,8 @@
       <!-- Displays locationSearch results -->
       <div *ngIf="locationDiv" class="scroll-container">
         <!-- If no results for locationSearch -->
-        <div *ngIf="this.noResultsFound">No Results found please try again</div>
         
+        <div class="no-results-found" *ngIf="this.noResultsFound">No Results found please try again</div>
         <app-address-card 
           *ngFor="let item of apiResponse;"
           class="hover"
@@ -221,7 +221,9 @@
       <button class="button-container" (click)="saveForm()" [disabled]="saveDisabled">Start Running!</button>
 
       <!-- Import prevoius JSON data -->
-      <p>Already used RunDiary?<a (click)="openImportDataModal()">Import JSON</a></p>
+      <div class="import-json-div">
+        <p>Already used RunDiary?<a (click)="openImportDataModal()">Import JSON</a></p>
+      </div>
 
     </mat-card-content>
   </mat-card>

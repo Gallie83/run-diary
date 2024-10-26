@@ -290,6 +290,7 @@ export class AppComponent implements OnInit, AfterViewInit{
         console.log(response)
         if(this.apiResponse.length === 0) {
           this.noResultsFound = true;
+          // this.locationDiv = false;
         }
       });
 
