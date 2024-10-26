@@ -52,9 +52,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
   - If no data is detected in local storage, the user will be shown an inital form screen, where they are asked to enter a username, and choose their home location. The Submit form button will be inactive until the user has entered a username and chosen a starting location.
 
-![Intial Form](assets/initial-form.png)
-
-![Intial Form 2](assets/initial-form2.png)
+![Search Home Location](assets/search-home-location.gif)
 
 ### User Information
 
