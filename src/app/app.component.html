@@ -103,6 +103,9 @@
                   </div>
                   
                   <mat-tab label="Completed Goals"> 
+
+                    <div class="no-goals" *ngIf="!anyGoalsCompleted">No Goals completed yet</div>
+
                     <div class="goal-div" *ngFor="let goal of user.goals">
                       <ng-container *ngIf="goal.completed == true">
                         <mat-card appearance="outlined">
@@ -125,7 +128,7 @@
                   
                 </div>
 
-                <div class="no-goals" *ngIf="user.goals.length === 0">No Goals added</div>
+                <div class="no-goals" *ngIf="!this.anyGoalsActive">No Active Goals</div>
                 
               </mat-tab>
             </mat-tab-group>

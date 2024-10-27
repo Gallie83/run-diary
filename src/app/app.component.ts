@@ -103,6 +103,9 @@ export class AppComponent implements OnInit, AfterViewInit{
   public locationDiv: boolean = false;
   public selectedAddress: any = null;
 
+  public anyGoalsActive: boolean = false;
+  public anyGoalsCompleted: boolean = false;
+
   public changingUsername:boolean = false;
   public newUsername: string = '';
   
@@ -135,7 +138,8 @@ export class AppComponent implements OnInit, AfterViewInit{
           this.runningStats = userRunningStats;
         }
         
-        this.hydrateUserGoals()
+        this.hydrateUserGoals();
+        this.checkGoals();
       } catch (error) {
         console.log(error);
       }
@@ -209,6 +213,29 @@ export class AppComponent implements OnInit, AfterViewInit{
     })
   }
 
+  public checkGoals(): void {
+    // Checks if any goals are currently active 
+    let isActive: boolean = false;
+    for(let i=0; i<this.user.goals.length; i++) {
+      if(this.user.goals[i].completed === false) {
+        isActive = true;
+        console.log('ACTIVE')
+        console.log(this.anyGoalsActive)
+      }
+    }
+    this.anyGoalsActive == isActive;
+    console.log(this.anyGoalsActive, '2')
+    
+    // Checks if any goals are currently completed
+    let isCompleted: boolean = false;
+    for(let i=0; i<this.user.goals.length; i++) {
+      if(this.user.goals[i].completed === true) {
+        isCompleted = true;
+      }
+    }
+    this.anyGoalsCompleted == isCompleted;
+  }
+
   // Calculates distance from start point to goal and users progress
   public hydrateUserGoals(): void {
     if(this.user.goals.length === 0) {
@@ -240,6 +267,7 @@ export class AppComponent implements OnInit, AfterViewInit{
         goal.progress = this.getUserGoalProgress(goal.distance, this.runningStats.totalDistanceRan);
       }
     )
+    this.checkGoals();
   }
 
   // Returns percentage of progress user has made to a goal 
@@ -257,6 +285,7 @@ export class AppComponent implements OnInit, AfterViewInit{
   public setGoalCompleted(goal: IGoal): void {
     goal.completed = true;
     localStorage.setItem('userData', JSON.stringify(this.user))
+    this.anyGoalsCompleted = true;
   }
 
   // Makes a Get request from Geocode API
@@ -332,6 +361,7 @@ export class AppComponent implements OnInit, AfterViewInit{
     this._resetCurrentGoal();
     this.hydrateUserGoals();
     this._updateUserData();
+    this.checkGoals();
   }
   
   private _updateUserData(): void {
@@ -370,6 +400,8 @@ export class AppComponent implements OnInit, AfterViewInit{
         }
       }
     })
+    this.checkGoals();
+    this._updateUserData();
   }
   
   public logRun(item: number): void {
