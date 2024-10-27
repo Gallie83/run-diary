@@ -197,7 +197,6 @@ export class AppComponent implements OnInit, AfterViewInit{
 
   public openImportDataModal(): void {
     const dialogRef = this.dialog.open(ImportModalComponent);
-
   }
 
   public deleteAccount(): void {
@@ -359,8 +358,18 @@ export class AppComponent implements OnInit, AfterViewInit{
     }
   }
 
+  // Opens DeleteConfirm modal before deleting selected goal
   public deleteGoal(goal: any): void {
     const dialogRef = this.dialog.open(DeleteConfirmComponent);
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        const goalIndex = this.user.goals.indexOf(goal);
+        console.log(goalIndex);
+        if(goalIndex >= 0) {
+          this.user.goals.splice(goalIndex, 1);
+        }
+      }
+    })
   }
   
   public logRun(item: number): void {
