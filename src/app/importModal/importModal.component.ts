@@ -50,11 +50,15 @@ export class ImportModalComponent {
   public importData(): void {
     if (this.fileData) {
       localStorage.clear()
-      for (const key in this.fileData) {
-        if (this.fileData.hasOwnProperty(key)) {
-          localStorage.setItem('userData', JSON.stringify(this.fileData));
-        }
+
+      // Store validated userData and runningStats separately in localStorage
+      if (this.fileData.userData) {
+        localStorage.setItem('userData', JSON.stringify(this.fileData.userData));
       }
+      if (this.fileData.runningStats) {
+        localStorage.setItem('userRunningStats', JSON.stringify(this.fileData.runningStats));
+      }
+
       alert('Data successfully imported into localStorage');
       // Close the modal and indicate success
       this.dialogRef.close(true); 
@@ -64,22 +68,24 @@ export class ImportModalComponent {
 
     // Validate the structure of the JSON
     validateJson(json: any): boolean {
-      if (
-        json.hasOwnProperty('username') &&
-        typeof json.username === 'string' &&
-        json.hasOwnProperty('totalDistance') &&
-        typeof json.totalDistance === 'number' &&
-        json.hasOwnProperty('startingLocation') &&
-        this.validateLocation(json.startingLocation) &&
-        json.hasOwnProperty('goals') &&
-        Array.isArray(json.goals) &&
-        json.goals.every(this.validateGoal)
-      ) {
-        return true;
-      }
-      console.log('init')
-
-      return false;
+      const hasValidUserData =
+        json.hasOwnProperty('userData') &&
+        json.userData.hasOwnProperty('username') &&
+        typeof json.userData.username === 'string' &&
+        json.userData.hasOwnProperty('totalDistance') &&
+        typeof json.userData.totalDistance === 'number' &&
+        json.userData.hasOwnProperty('startingLocation') &&
+        this.validateLocation(json.userData.startingLocation) &&
+        json.userData.hasOwnProperty('goals') &&
+        Array.isArray(json.userData.goals) &&
+        json.userData.goals.every(this.validateGoal);
+    
+      const hasValidRunningStats =
+        json.hasOwnProperty('runningStats') &&
+        typeof json.runningStats.totalDistanceRan === 'number' &&
+        typeof json.runningStats.numberOfRuns === 'number';
+    
+      return hasValidUserData && hasValidRunningStats;
     }
   
     // Validate starting location structure

@@ -127,6 +127,7 @@ export class AppComponent implements OnInit, AfterViewInit{
         storage = localStorage.getItem('userData');
         console.log(storage)
         userRunningStats = localStorage.getItem('userRunningStats');
+        console.log(userRunningStats);
         
         // Checks if user has data in localStorage
         if(storage !== "" && storage ) {
@@ -182,8 +183,15 @@ export class AppComponent implements OnInit, AfterViewInit{
   public downloadLocalStorage(): void {
     // Retrieve from localStorage
     const userData = JSON.parse(localStorage.getItem('userData')!); // Parse back to an object
+    const runningStats = JSON.parse(localStorage.getItem('userRunningStats')!);
 
-    const localStorageData = JSON.stringify(userData);
+    // Combine userData + runningData then convert to JSON string
+    const combinedData= {
+      userData: userData,
+      runningStats: runningStats
+    };
+
+    const localStorageData = JSON.stringify(combinedData);
 
     // Create blob with Json Data
     const blob = new Blob([localStorageData], { type: 'application/json' });
@@ -215,16 +223,11 @@ export class AppComponent implements OnInit, AfterViewInit{
 
   public checkGoals(): void {
     // Checks if any goals are currently active 
-    let isActive: boolean = false;
     for(let i=0; i<this.user.goals.length; i++) {
       if(this.user.goals[i].completed === false) {
-        isActive = true;
-        console.log('ACTIVE')
-        console.log(this.anyGoalsActive)
+        this.anyGoalsActive == true
       }
     }
-    this.anyGoalsActive == isActive;
-    console.log(this.anyGoalsActive, '2')
     
     // Checks if any goals are currently completed
     let isCompleted: boolean = false;
