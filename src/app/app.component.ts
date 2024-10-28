@@ -208,7 +208,7 @@ export class AppComponent implements OnInit, AfterViewInit{
   }
 
   public openImportDataModal(): void {
-    const dialogRef = this.dialog.open(ImportModalComponent);
+    this.dialog.open(ImportModalComponent);
   }
 
   public deleteAccount(): void {
@@ -225,7 +225,7 @@ export class AppComponent implements OnInit, AfterViewInit{
     // Checks if any goals are currently active 
     for(let i=0; i<this.user.goals.length; i++) {
       if(this.user.goals[i].completed === false) {
-        this.anyGoalsActive == true
+        this.anyGoalsActive = true
       }
     }
     
@@ -236,7 +236,7 @@ export class AppComponent implements OnInit, AfterViewInit{
         isCompleted = true;
       }
     }
-    this.anyGoalsCompleted == isCompleted;
+    this.anyGoalsCompleted = isCompleted;
   }
 
   // Calculates distance from start point to goal and users progress
@@ -289,6 +289,7 @@ export class AppComponent implements OnInit, AfterViewInit{
     goal.completed = true;
     localStorage.setItem('userData', JSON.stringify(this.user))
     this.anyGoalsCompleted = true;
+    this.checkGoals();
   }
 
   // Makes a Get request from Geocode API
@@ -367,6 +368,7 @@ export class AppComponent implements OnInit, AfterViewInit{
     this.checkGoals();
   }
   
+  // Updates localStorage to reflect current state
   private _updateUserData(): void {
     localStorage.setItem('userData', JSON.stringify(this.user))
   }
@@ -399,12 +401,14 @@ export class AppComponent implements OnInit, AfterViewInit{
         const goalIndex = this.user.goals.indexOf(goal);
         console.log(goalIndex);
         if(goalIndex >= 0) {
+          console.log(goal)
           this.user.goals.splice(goalIndex, 1);
         }
       }
+      this.checkGoals();
+      this._updateUserData();
+      console.log(this.user.goals)
     })
-    this.checkGoals();
-    this._updateUserData();
   }
   
   public logRun(item: number): void {
