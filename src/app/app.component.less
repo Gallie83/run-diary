@@ -21,7 +21,7 @@
     flex-direction: column;
     justify-content: space-evenly;
     box-sizing: border-box;
-    border-right: 1px solid black;
+    border-right: 2px solid #F038FF;
     width: 25%; 
     height: 100%;
     padding: 2%;
@@ -32,6 +32,7 @@
     transition: width 0.3s ease;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
+    background-color: black;
   }
   
   .user-info-component {
@@ -70,7 +71,13 @@
     align-self: flex-start;
     margin-top: auto;
     margin-bottom: 2%;
-    border: 1px solid black;
+    border: 2px solid white;
+    background-color: #F038FF;
+    color: black;
+  }
+
+  mat-flat-button {
+    background-color: #F038FF;
   }
 
   // Content box with Active Goals + Add a Goal stylings  
@@ -80,10 +87,13 @@
     justify-content: center;
     padding: 2%;
     height: 500px;
+    background-color: black;
+    color: white;
   }
   
   .component {
-    border: 1px solid #2C0703;
+    background-color: white;
+    border: 2px solid #F038FF;
     border-radius: 5px;
   }
 
@@ -109,6 +119,7 @@
    
    .goal-info { 
      display: flex;
+     color: black;
      justify-content: space-between; 
      align-items: center; 
    }
@@ -188,6 +199,13 @@
     transition: background-color 0.3s ease;
     margin: 1% 0%;
   }
+  
+  .add-goal-search-button {
+    background-color: black;
+    color: white ;
+    border: 1px solid #F038FF;
+    border-radius: 5px;
+  }
 
   .location-list-div {
     background-color: black;
@@ -217,7 +235,6 @@
   }
 
 /* Initial form screen stylings */
-
   .opening-form-card {
     display: flex;
     max-height: 99vh;

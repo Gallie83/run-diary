@@ -222,6 +222,7 @@ export class AppComponent implements OnInit, AfterViewInit{
   }
 
   public checkGoals(): void {
+    this.anyGoalsActive = false;
     // Checks if any goals are currently active 
     for(let i=0; i<this.user.goals.length; i++) {
       if(this.user.goals[i].completed === false) {

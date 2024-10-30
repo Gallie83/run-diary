@@ -52,7 +52,18 @@
                 <button (click)="logRun(distanceRan)">Log Run</button>
             </mat-expansion-panel>
 
-            <button class="settings-button" mat-raised-button [matMenuTriggerFor]="menu">Settings</button>
+            <button  
+              style="align-self: flex-start;
+              margin-top: auto;
+              margin-bottom: 2%;
+              border: 2px solid #f038ff;
+              background-color: black;
+              color: #f038ff;" 
+              class="settings-button" 
+              mat-flat-button 
+              [matMenuTriggerFor]="menu"
+            >Settings</button>
+
             <mat-menu #menu="matMenu">
               <button mat-menu-item (click)="convertDistance()"><mat-icon>cached</mat-icon> {{ this.user.kilometers ? 'Miles' : 'Kilometers'}} </button>
               <button mat-menu-item (click)="resetDistance()">Reset distance ran 
@@ -147,7 +158,7 @@
                       required
                       (keydown.enter)="generateLocationList()"
                       />
-                      <button class="location-button" (click)="generateLocationList()">enter location</button>
+                      <button class="add-goal-search-button" (click)="generateLocationList()">Search location</button>
                     <div *ngIf="addingGoal" class="location-list-div">
                       <!-- If no results for locationSearch -->
                       <div *ngIf="this.noResultsFound">No Results found please try again</div>
