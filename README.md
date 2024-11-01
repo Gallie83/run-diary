@@ -74,7 +74,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ### Active Goals
 
-- A list is displayed with an active goals the user has added. The user can see the goal name, distance from their home location and a progress bar with how much percent they have so far.
+- A list is displayed with any active goals the user has added. The user can see the goal name, distance from their home location and a progress bar with how much percent they have so far.
 
 - If the user has ran the total goal distance, then a clickable green section with 'GOAL COMPLETED' appears beneath the goal, that then moves it to the Completed Goals tab. Users have the option to delete a goal at any time.
 
