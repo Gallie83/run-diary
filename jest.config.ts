@@ -1,19 +1,19 @@
 import { pathsToModuleNameMapper } from 'ts-jest';
-import { compilerOptions } from './tsconfig.json'; 
+import { compilerOptions } from './tsconfig.json';
 
 export default {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
+  setupFilesAfterEnv: ['./setup-jest.ts'],
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths || {}, { prefix: '<rootDir>/' }),
-  setupFilesAfterEnv: ['./setup-jest.ts'], 
   transform: {
-    '^.+\\.(ts|js|html)$': 'ts-jest',
+    '^.+\\.(ts|js|html)$': 'ts-jest', 
   },
+  moduleFileExtensions: ['ts', 'js', 'html', 'json', 'node'],
+  transformIgnorePatterns: ['node_modules/(?!(@angular|your-module-name)/)'],
   globals: {
     'ts-jest': {
-      tsconfig: 'tsconfig.spec.json',
+      useESM: true, 
     },
   },
-  moduleFileExtensions: ['ts', 'js', 'html', 'json'],
-  coverageDirectory: './coverage',
 };
