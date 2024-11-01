@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
+    "test": "ts-node ./node_modules/jest/bin/jest.js",
     "serve:ssr:run-diary": "node dist/run-diary/server/server.mjs"
   },
   "private": true,
@@ -47,6 +47,8 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "node-open-geocoder": "^4.0.1",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
     "typescript": "~5.5.2"
   }
 }
