@@ -1,7 +1,3 @@
-<!-- ## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files. -->
-
 # **_RunDiary_**
 
 RunDiary is a web application where users can track their running progress towards a chosen destination from their home location. By logging runs, users can see the distance they've covered and how much further they need to go to reach their goal. It's a motivating way to visualize your running progress!
@@ -16,6 +12,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 # Contents
 
+- [**Deployment**](#deployment)
 - [**Technologies Used**](#technologies-used)
 - [**Features**](#features)
   - [**Existing Features**](#existing-features)
@@ -29,6 +26,26 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
     - [Confirmation Modals](#confirmation-modals)
 
 [Back to top](#contents)
+
+# Deployment
+
+To deploy the RunDiary application, start by cloning the repository to your local machine. You can do this by running the following command in your terminal:
+
+git clone https://github.com/Gallie83/run-diary.git
+
+Once the repository is cloned, navigate into the project directory:
+
+cd run-diary
+
+Make sure you have all the necessary dependencies installed by running:
+
+npm install
+
+To start the development server, run:
+
+ng serve
+
+This will launch the application, and you can access it by navigating to http://localhost:4200/ in your web browser. The application will automatically reload if you make any changes to the source files.
 
 # Technologies Used
 
